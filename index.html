@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Proposal Builder</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Assistant',sans-serif}
 :root{
   --ink:#171C33;--ink2:#3D4461;--ink3:#717185;--ink4:#A1A1B5;
   --paper:#fff;--paper2:#F9FAFB;--paper3:#F3F4F6;--rule:#E5E7EB;
-  --accent:#6366f1;--accent-bg:#EEF2FF;--accent-bd:#C7D2FE;--accent-dark:#4338CA;
+  --accent:#334FB4;--accent-bg:#EEF2FF;--accent-bd:#C7D2FE;--accent-dark:#1E3A8A;
   --ok:#16a34a;--ok-bg:#f0fdf4;--ok-bd:#bbf7d0;
 }
 html,body{height:100%;background:var(--paper2)}
@@ -45,7 +45,7 @@ label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:upperca
 label span{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink4)}
 input[type=text],input[type=url],input[type=color],textarea,select{
   width:100%;padding:9px 12px;border:1px solid var(--rule);border-radius:7px;font-size:14px;color:var(--ink);
-  background:var(--paper);transition:border-color .15s;outline:none;font-family:'DM Sans',sans-serif
+  background:var(--paper);transition:border-color .15s;outline:none;font-family:'Assistant',sans-serif
 }
 input[type=text]:focus,input[type=url]:focus,textarea:focus{border-color:var(--accent)}
 input[type=color]{padding:4px 8px;height:38px;cursor:pointer}
@@ -55,8 +55,8 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 .section-sep{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);padding:16px 0 8px;border-top:1px solid var(--rule);margin-top:8px}
 .section-sep:first-child{border-top:none;padding-top:0}
 /* Competitor rows */
-.comp-row{display:grid;grid-template-columns:160px 80px 120px 120px;gap:8px;align-items:end;margin-bottom:8px}
-.comp-row-header{display:grid;grid-template-columns:160px 80px 120px 120px;gap:8px;margin-bottom:4px}
+.comp-row{display:grid;grid-template-columns:160px 60px 70px 110px 110px;gap:8px;align-items:end;margin-bottom:8px}
+.comp-row-header{display:grid;grid-template-columns:160px 60px 70px 110px 110px;gap:8px;margin-bottom:4px}
 /* AI prompt rows */
 .prompt-row{display:grid;grid-template-columns:1fr 70px 70px 80px;gap:8px;align-items:end;margin-bottom:8px}
 .prompt-row-header{display:grid;grid-template-columns:1fr 70px 70px 80px;gap:8px;margin-bottom:4px}
@@ -76,8 +76,8 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 .btn{padding:9px 20px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
 .btn-ghost{background:transparent;color:var(--ink3);border:1px solid var(--rule)}
 .btn-ghost:hover{background:var(--paper2)}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{background:var(--accent-dark)}
+.btn-primary{background:#334FB4;color:#fff}
+.btn-primary:hover{background:#1E3A8A}
 .btn-success{background:var(--ok);color:#fff}
 .btn-success:hover{background:#15803d}
 .btn-group{display:flex;gap:10px}
@@ -101,10 +101,19 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 
   <!-- Top bar -->
   <div class="topbar">
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#6366f1"/><path d="M8 14h12M14 8l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <img src="https://cdn.shopify.com/s/files/1/0813/6707/3081/files/Color_logo_-_no_background_1f36d52b-3764-407f-930c-151eb23683f7.png?v=1740765450"
+         alt="Growth Automated" style="height:26px;width:auto;object-fit:contain">
     <div>
       <div class="topbar-logo">Proposal Builder</div>
-      <div class="topbar-sub">Open-source SEO / AEO proposal generator</div>
+      <div class="topbar-sub">AI Visibility + SEO proposals — Growth Automated</div>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+      <button class="btn btn-ghost" onclick="loadDemo()" style="font-size:12px;padding:6px 14px;display:flex;align-items:center;gap:6px">
+        <span>🏒</span> Load Hockey Stickman demo
+      </button>
+      <button class="btn btn-ghost" onclick="if(confirm('Clear all data and start fresh?')){localStorage.removeItem(\'pb_data\');Object.assign(D,PREFILL);buildDynamicFields();syncInputsToD();renderStep(currentStep);}" style="font-size:12px;padding:6px 14px;color:#dc2626;border-color:#fca5a5">
+        Reset
+      </button>
     </div>
   </div>
 
@@ -148,17 +157,17 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
       <div class="field-group" style="margin-top:20px">
         <label>Brand Colour</label>
         <div class="color-preview-row">
-          <input type="color" id="agencyColor" value="#6366f1" oninput="save();updateColorPreview('agency')">
-          <span style="font-size:13px;color:var(--ink3)" id="agencyColorHex">#6366f1</span>
+          <input type="color" id="agencyColor" value="#334FB4" oninput="save();updateColorPreview('agency')">
+          <span style="font-size:13px;color:var(--ink3)" id="agencyColorHex">#334FB4</span>
         </div>
         <div class="color-swatches">
+          <div class="color-swatch-btn" style="background:#334FB4" onclick="setColor('agency','#334FB4')" title="GA Blue"></div>
           <div class="color-swatch-btn" style="background:#6366f1" onclick="setColor('agency','#6366f1')" title="Indigo"></div>
           <div class="color-swatch-btn" style="background:#0ea5e9" onclick="setColor('agency','#0ea5e9')" title="Sky"></div>
           <div class="color-swatch-btn" style="background:#10b981" onclick="setColor('agency','#10b981')" title="Emerald"></div>
           <div class="color-swatch-btn" style="background:#f59e0b" onclick="setColor('agency','#f59e0b')" title="Amber"></div>
           <div class="color-swatch-btn" style="background:#ef4444" onclick="setColor('agency','#ef4444')" title="Red"></div>
           <div class="color-swatch-btn" style="background:#8b5cf6" onclick="setColor('agency','#8b5cf6')" title="Violet"></div>
-          <div class="color-swatch-btn" style="background:#ec4899" onclick="setColor('agency','#ec4899')" title="Pink"></div>
           <div class="color-swatch-btn" style="background:#171C33" onclick="setColor('agency','#171C33')" title="Dark"></div>
         </div>
       </div>
@@ -198,11 +207,12 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
       <div class="field-group">
         <label>Accent Colour <span>— tints slides to match their brand</span></label>
         <div class="color-preview-row">
-          <input type="color" id="clientColor" value="#0ea5e9" oninput="save();updateColorPreview('client')">
-          <span style="font-size:13px;color:var(--ink3)" id="clientColorHex">#0ea5e9</span>
+          <input type="color" id="clientColor" value="#334FB4" oninput="save();updateColorPreview('client')">
+          <span style="font-size:13px;color:var(--ink3)" id="clientColorHex">#334FB4</span>
         </div>
         <div class="color-swatches">
           <div class="color-swatch-btn" style="background:#FF4F12" onclick="setColor('client','#FF4F12')" title="Floqer Orange"></div>
+          <div class="color-swatch-btn" style="background:#334FB4" onclick="setColor('client','#334FB4')" title="GA Blue"></div>
           <div class="color-swatch-btn" style="background:#0ea5e9" onclick="setColor('client','#0ea5e9')" title="Sky"></div>
           <div class="color-swatch-btn" style="background:#6366f1" onclick="setColor('client','#6366f1')" title="Indigo"></div>
           <div class="color-swatch-btn" style="background:#10b981" onclick="setColor('client','#10b981')" title="Emerald"></div>
@@ -217,13 +227,13 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
       </div>
     </div>
 
-    <!-- Step 2: The Hook -->
+    <!-- Step 2: Cover + Gaps -->
     <div class="step-content" data-step="2">
-      <div class="step-title">The Hook</div>
-      <div class="step-desc">Slide 1 is your cover. The headline should name the client's specific problem or opportunity. The subline reframes it as something you can solve.</div>
+      <div class="step-title">Cover + Gaps</div>
+      <div class="step-desc">Slide 1 is your cover. The headline should name the client's specific problem or opportunity. Slide 2 shows the structural gaps keeping them out of AI answers.</div>
       <div class="field-group">
         <label>Headline</label>
-        <textarea id="slide01headline" placeholder="e.g. How Floqer Can Own AI Search in CRM Enrichment & GTM Data" oninput="save()" style="min-height:80px"></textarea>
+        <textarea id="slide01headline" placeholder="e.g. How Floqer Can Own AI Search in CRM Enrichment &amp; GTM Data" oninput="save()" style="min-height:80px"></textarea>
         <div class="hint">Be specific to their niche. Mention the category they want to own.</div>
       </div>
       <div class="field-group">
@@ -231,12 +241,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
         <textarea id="slide01subline" placeholder="e.g. You have the right product. The gap is visibility. Every GTM team asking AI about CRM enrichment gets sent to ZoomInfo or Clay. Here is how to change that." oninput="save()" style="min-height:100px"></textarea>
         <div class="hint">Max 2 sentences. State what's broken, then tease the fix.</div>
       </div>
-    </div>
-
-    <!-- Step 3: Gaps -->
-    <div class="step-content" data-step="3">
-      <div class="step-title">The Gaps</div>
-      <div class="step-desc">Slide 3 shows 4 specific reasons why the client is losing ground today. Each card has a short title and a 1-2 sentence explanation.</div>
+      <div class="section-sep">Gaps (Slide 2)</div>
       <div class="field-group">
         <label>Slide Title</label>
         <input type="text" id="slide03title" placeholder="e.g. Why Floqer Is Invisible in AI Search Today" oninput="save()">
@@ -245,24 +250,35 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
         <label>Slide Subtitle</label>
         <input type="text" id="slide03subtitle" placeholder="e.g. Three structural gaps are keeping you out of AI answers." oninput="save()">
       </div>
-      <div class="section-sep">Gap Cards</div>
       <div id="gapCards"></div>
     </div>
 
-    <!-- Step 4: SEO Data -->
-    <div class="step-content" data-step="4">
+    <!-- Step 3: SEO Data -->
+    <div class="step-content" data-step="3">
       <div class="step-title">SEO Data</div>
-      <div class="step-desc">Slide 4 shows how the client compares to competitors on Domain Rating, keyword count, and traffic. Pull this from Ahrefs or SEMrush.</div>
+      <div class="step-desc">Slide 3 shows how the client compares to competitors on Domain Rating, AI Score, keyword count, and traffic. Auto-fill keywords &amp; traffic from DataForSEO below, or enter manually from Ahrefs / SEMrush.</div>
+      <div class="dfs-panel" style="background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:14px;margin-bottom:18px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:10px">Auto-fill from DataForSEO <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink3)">— optional</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+          <div class="field-group" style="flex:1;min-width:240px;margin-bottom:0">
+            <label>DataForSEO API token <span>— base64 of login:password</span></label>
+            <input type="password" id="dfsAuth" placeholder="Paste your DataForSEO Basic-auth token" oninput="saveDfsAuth()" autocomplete="off">
+          </div>
+          <button type="button" class="btn btn-primary" id="dfsBtn" onclick="fetchDataForSEO()" style="white-space:nowrap">Fetch from DataForSEO</button>
+        </div>
+        <div id="dfsStatus" style="font-size:12px;color:var(--ink3);margin-top:8px;min-height:16px"></div>
+        <div style="font-size:11px;color:var(--ink4);margin-top:4px;line-height:1.5">Fills <strong>Domain Rank</strong>, <strong>Org. Keywords</strong>, <strong>Monthly Traffic</strong>, and <strong>Ref. Domains</strong> (client only) for all domains below. Domain Rank is DataForSEO's 0–100 authority score (equivalent to Ahrefs DR). Your token is stored only in this browser and is <strong>never</strong> included in the generated proposal.</div>
+      </div>
       <div class="section-sep">Client metrics</div>
       <div class="field-row col4" style="margin-bottom:16px">
-        <div class="field-group"><label>DR</label><input type="text" id="clientDR" placeholder="42" oninput="save()"></div>
+        <div class="field-group"><label>Domain Rank</label><input type="text" id="clientDR" placeholder="42" oninput="save()"></div>
         <div class="field-group"><label>Org. Keywords</label><input type="text" id="clientKeywords" placeholder="1,200" oninput="save()"></div>
         <div class="field-group"><label>Monthly Traffic</label><input type="text" id="clientTraffic" placeholder="8,500" oninput="save()"></div>
         <div class="field-group"><label>Ref. Domains</label><input type="text" id="clientRefDomains" placeholder="310" oninput="save()"></div>
       </div>
       <div class="section-sep">Competitors (up to 4)</div>
       <div class="comp-row-header">
-        <label>Domain</label><label>DR</label><label>Keywords</label><label>Traffic</label>
+        <label>Domain</label><label>Rank</label><label>AI Score</label><label>Keywords</label><label>Traffic</label>
       </div>
       <div id="compRows"></div>
       <div class="field-group" style="margin-top:16px">
@@ -271,54 +287,120 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
       </div>
     </div>
 
-    <!-- Step 5: AI Visibility -->
-    <div class="step-content" data-step="5">
-      <div class="step-title">AI Visibility</div>
-      <div class="step-desc">Slide 5 shows the client's AI presence score and which prompts they appear (or don't appear) in. Pull from your preferred AI visibility tracking tool.</div>
-      <div class="section-sep">Key metrics</div>
+    <!-- Step 4: AI Data -->
+    <div class="step-content" data-step="4">
+      <div class="step-title">AI Visibility Data</div>
+      <div class="step-desc">Pull live data from Peekaboo. Enter your API key once — it's saved locally and never included in the proposal output.</div>
+
+      <div class="section-sep">Peekaboo API Key <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink3)">— stored locally, never exported</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:8px">
+        <div class="field-group" style="flex:1;margin-bottom:0">
+          <label>API Key <span>— starts with pk_</span></label>
+          <input type="text" id="peekabooApiKey" placeholder="pk_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx_..." oninput="savePeekAuth()">
+        </div>
+        <div id="peekAuthStatus" style="font-size:12px;padding-bottom:10px;white-space:nowrap;flex-shrink:0"></div>
+      </div>
+      <div class="hint" style="margin-bottom:16px">Find your API key in the <strong>Peekaboo dashboard → Settings → API</strong>. It's safe to save here — it only has read access.</div>
+
+      <div class="section-sep">Brand ID &amp; Fetch</div>
+
+      <!-- Brand ID finder — curl /brands to list, then click to select -->
+      <div style="margin-bottom:12px">
+        <button type="button" class="btn btn-ghost" id="brandPickerToggleBtn" onclick="toggleBrandPicker()" style="font-size:12px;padding:5px 12px;margin-bottom:0">
+          ▸ Don't know your Brand ID? List all brands on your account
+        </button>
+        <div id="brandPickerBlock" style="display:none;background:var(--paper3);border:1px solid var(--rule);border-radius:8px;padding:14px;margin-top:8px">
+          <div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:6px">Run this in your terminal to list brands:</div>
+          <code id="brandListCmd" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);word-break:break-all;line-height:1.7;display:block"></code>
+          <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+            <button class="btn btn-ghost" onclick="copyBrandListCmd()" style="font-size:12px;padding:5px 12px;flex-shrink:0">Copy</button>
+            <div style="font-size:12px;color:var(--ink3)">Then paste the output below and click <strong>Pick brand</strong>.</div>
+          </div>
+          <textarea id="brandListPaste" placeholder="Paste JSON here…" style="margin-top:8px;min-height:60px;font-family:'DM Mono',monospace;font-size:11px;resize:vertical"></textarea>
+          <button class="btn btn-primary" onclick="parseBrandsJson()" style="margin-top:8px;font-size:13px;padding:6px 14px">Pick brand →</button>
+          <div id="brandListResults" style="margin-top:10px"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:8px">
+        <div class="field-group" style="flex:1;margin-bottom:0">
+          <label>Brand ID <span>— UUID (auto-filled when you pick above, or paste from dashboard)</span></label>
+          <input type="text" id="peekabooId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" oninput="save()">
+        </div>
+        <button type="button" class="btn btn-primary" id="peekabooBtn" onclick="fetchPeekaboo()" style="white-space:nowrap;flex-shrink:0">Fetch from Peekaboo</button>
+      </div>
+      <div id="peekabooStatus" style="font-size:12px;color:var(--ink3);margin-bottom:8px;min-height:16px"></div>
+
+      <div id="peekCurlBlock" style="display:none;background:var(--paper3);border:1px solid var(--rule);border-radius:8px;padding:14px;margin-bottom:16px">
+        <div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:6px">Browser can't reach Peekaboo (CORS) — run this in your terminal instead:</div>
+        <code id="peekCurlCmd" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);word-break:break-all;line-height:1.7;display:block"></code>
+        <div style="display:flex;gap:8px;margin-top:10px;align-items:flex-start">
+          <button class="btn btn-ghost" onclick="copyCurlCmd()" style="font-size:12px;padding:5px 12px;flex-shrink:0">Copy</button>
+          <div style="font-size:12px;color:var(--ink3);line-height:1.5">Paste the JSON output below and click <strong>Parse JSON</strong>.</div>
+        </div>
+        <textarea id="peekJsonPaste" placeholder="Paste JSON from terminal here…" style="margin-top:10px;min-height:80px;font-family:'DM Mono',monospace;font-size:11px;resize:vertical"></textarea>
+        <button class="btn btn-primary" onclick="parsePeekabooJson()" style="margin-top:8px;font-size:13px;padding:7px 16px">Parse JSON &amp; fill fields</button>
+      </div>
+
+      <div class="section-sep">Key Metrics</div>
       <div class="field-row col4" style="margin-bottom:16px">
-        <div class="field-group"><label>AI Score</label><input type="text" id="aiScore" placeholder="23/100" oninput="save()"></div>
-        <div class="field-group"><label>AI Rank</label><input type="text" id="aiRank" placeholder="#8 in category" oninput="save()"></div>
-        <div class="field-group"><label>Citations</label><input type="text" id="aiCitations" placeholder="4" oninput="save()"></div>
-        <div class="field-group"><label>AI Chats/mo</label><input type="text" id="aiChats" placeholder="12,000" oninput="save()"></div>
+        <div class="field-group"><label>AI Score</label><input type="text" id="aiScore" placeholder="23" oninput="save()"></div>
+        <div class="field-group"><label>AI Rank</label><input type="text" id="aiRank" placeholder="#3 in category" oninput="save()"></div>
+        <div class="field-group"><label>Citations</label><input type="text" id="aiCitations" placeholder="42" oninput="save()"></div>
+        <div class="field-group"><label>Chats Analysed</label><input type="text" id="aiChats" placeholder="140" oninput="save()"></div>
       </div>
+
       <div class="section-sep">Prompts (up to 6)</div>
-      <div class="prompt-row-header">
-        <label>Prompt text</label><label>Mentions</label><label>Score</label><label>Status</label>
-      </div>
+      <div class="prompt-row-header"><label>Prompt text</label><label>Mentions</label><label>Score</label><label>Status</label></div>
       <div id="promptRows"></div>
+
       <div class="section-sep">Top cited sources (up to 6)</div>
       <div id="sourceRows"></div>
+
       <div class="field-group" style="margin-top:16px">
-        <label>Callout</label>
-        <input type="text" id="slide05callout" placeholder="e.g. ChatGPT recommends ZoomInfo 8x more than Floqer for the same queries." oninput="save()">
+        <label>Callout <span>— one-line insight shown below the prompt table</span></label>
+        <input type="text" id="slide05callout" placeholder="e.g. Reddit gets cited 3× more than your site on buying queries." oninput="save()">
       </div>
     </div>
 
-    <!-- Step 6: Keywords & Close -->
-    <div class="step-content" data-step="6">
-      <div class="step-title">Keywords & Close</div>
-      <div class="step-desc">Three keyword clusters for slide 6, plus the pricing, timeline details, and closing slide content.</div>
-      <div class="section-sep">Keyword clusters (Slide 6)</div>
+    <!-- Step 5: Keywords -->
+    <div class="step-content" data-step="5">
+      <div class="step-title">Keywords &amp; Competitors</div>
+      <div class="step-desc">Three keyword clusters for slide 5, plus the competitor capture content for slide 6.</div>
+      <div class="section-sep">Keyword clusters (Slide 5)</div>
       <div id="kwClusters"></div>
       <div class="field-group">
-        <label>Slide 6 Callout</label>
+        <label>Slide 5 Callout</label>
         <input type="text" id="slide06callout" placeholder="e.g. These 9 keywords alone represent 8,000+ monthly searches with clear buyer intent." oninput="save()">
       </div>
-      <div class="section-sep">Competitor capture (Slide 7)</div>
+      <div class="section-sep">Competitor capture (Slide 6)</div>
       <div class="hint" style="margin-bottom:12px">Enter 4–6 competitor domains you'll create comparison/alternative content against.</div>
       <div id="compAltRows"></div>
       <div class="field-group" style="margin-top:12px">
         <label>Buyer context sentence <span>— e.g. "These are the tools [buyers] already use."</span></label>
         <input type="text" id="slide07subtitle" placeholder="e.g. These are the tools GTM teams already use when they search for alternatives." oninput="save()">
       </div>
-      <div class="section-sep">Investment & Timeline (Slide 11)</div>
+    </div>
+
+    <!-- Step 6: Pricing -->
+    <div class="step-content" data-step="6">
+      <div class="step-title">Pricing &amp; Close</div>
+      <div class="step-desc">Deliverable options, pricing, timeline details, and closing slide content.</div>
+      <div class="section-sep">Deliverables</div>
+      <div class="field-group">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;color:var(--ink)">
+          <input type="checkbox" id="includeReddit" onchange="D.includeReddit=this.checked;save()" style="width:16px;height:16px;accent-color:var(--accent)">
+          Include Reddit community presence as a deliverable
+        </label>
+        <div class="hint">Reddit is cited in 40%+ of AI answers. Uncheck for clients where community posting is not a fit.</div>
+      </div>
+      <div class="section-sep">Investment &amp; Timeline (Slide 8)</div>
       <div class="field-row col3">
         <div class="field-group"><label>Monthly Price</label><input type="text" id="monthlyPrice" placeholder="$1,500" oninput="save()"></div>
         <div class="field-group"><label>CMS Type</label><input type="text" id="cmsType" placeholder="WordPress" oninput="save()"></div>
         <div class="field-group"><label>Month 3 competitors</label><input type="text" id="timelineM3" placeholder="ZoomInfo, Clearbit, Clay" oninput="save()"></div>
       </div>
-      <div class="section-sep">Closing (Slide 12)</div>
+      <div class="section-sep">Closing (Slide 9)</div>
       <div class="field-group">
         <label>Closing paragraph</label>
         <textarea id="closingPara" placeholder="e.g. You've seen where Floqer stands, who is getting cited instead, and exactly what we'd build to change that. Every day without content is another day buyers find ZoomInfo instead of Floqer." oninput="save()" style="min-height:80px"></textarea>
@@ -327,7 +409,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 
     <!-- Step 7: Generate -->
     <div class="step-content" data-step="7">
-      <div class="step-title">Generate & Download</div>
+      <div class="step-title">Generate &amp; Download</div>
       <div class="step-desc">Review your settings, then generate the proposal as a standalone HTML file. Open it in Chrome, navigate slides with arrow keys, and export to PDF via <strong>Print → Save as PDF</strong> (landscape, no margins, background graphics on).</div>
       <div class="generate-card">
         <h3>Summary</h3>
@@ -358,39 +440,143 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 
 <script>
 // ─────────────────────────────────────────────
-// DATA MODEL
+// DATA MODEL + PREFILL
 // ─────────────────────────────────────────────
-const D = {
-  agencyName:'', agencyWebsite:'', agencyLogo:'', agencyColor:'#6366f1',
-  agencyBooking:'', agencyToolName:'', agencyToolLogo:'', agencyToolWebsite:'', agencyToolDesc:'',
-  clientName:'', clientDomain:'', clientColor:'#0ea5e9', proposalDate:'', buyerType:'',
-  slide01headline:'', slide01subline:'',
-  slide03title:'', slide03subtitle:'',
+const PREFILL = {
+  agencyName: 'Growth Automated',
+  agencyWebsite: 'https://growthautomated.ai',
+  agencyLogo: 'https://cdn.shopify.com/s/files/1/0813/6707/3081/files/Color_logo_-_no_background_1f36d52b-3764-407f-930c-151eb23683f7.png?v=1740765450',
+  agencyColor: '#334FB4',
+  agencyBooking: 'https://seo-for-ai.growthautomated.ai/book_time',
+  agencyToolName: 'AI Peekaboo',
+  agencyToolLogo: '',
+  agencyToolWebsite: 'https://www.aipeekaboo.com',
+  agencyToolDesc: 'Tracks brand visibility across ChatGPT, Gemini, Perplexity, Google AIO, and Google AI Mode.',
+  includeReddit: true,
+  clientName: '', clientDomain: '', clientLogo: '', clientColor: '#334FB4',
+  proposalDate: 'June 2026', buyerType: '',
+  slide01headline: '', slide01subline: '',
+  slide03title: '', slide03subtitle: '',
   gaps: [{title:'',body:''},{title:'',body:''},{title:'',body:''},{title:'',body:''}],
-  clientDR:'', clientKeywords:'', clientTraffic:'', clientRefDomains:'',
-  comps:[{name:'',domain:'',dr:'',kw:'',traffic:''},{name:'',domain:'',dr:'',kw:'',traffic:''},
-         {name:'',domain:'',dr:'',kw:'',traffic:''},{name:'',domain:'',dr:'',kw:'',traffic:''}],
-  slide04callout:'',
-  aiScore:'', aiRank:'', aiCitations:'', aiChats:'',
-  prompts:[{text:'',mentions:'',score:'',status:'warn'},{text:'',mentions:'',score:'',status:'red'},
-           {text:'',mentions:'',score:'',status:'red'},{text:'',mentions:'',score:'',status:'warn'},
-           {text:'',mentions:'',score:'',status:'red'},{text:'',mentions:'',score:'',status:'ok'}],
-  sources:[{domain:'',mentions:''},{domain:'',mentions:''},{domain:'',mentions:''},
-           {domain:'',mentions:''},{domain:'',mentions:''},{domain:'',mentions:''}],
-  slide05callout:'',
-  kwClusters:[{title:'',kw1:'',kw2:'',kw3:''},{title:'',kw1:'',kw2:'',kw3:''},{title:'',kw1:'',kw2:'',kw3:''}],
+  comps: [
+    {domain:'',dr:'',kw:'',traffic:'',aiScore:''},
+    {domain:'',dr:'',kw:'',traffic:'',aiScore:''},
+    {domain:'',dr:'',kw:'',traffic:'',aiScore:''},
+    {domain:'',dr:'',kw:'',traffic:'',aiScore:''}
+  ],
+  aiScore:'', aiRank:'', aiCitations:'', aiChats:'', slide05callout:'',
+  prompts: Array(6).fill(null).map(()=>({text:'',mentions:'',score:'',status:''})),
+  sources: Array(6).fill(null).map(()=>({domain:'',mentions:''})),
+  kwClusters: [{title:'',kw1:'',kw2:'',kw3:''},{title:'',kw1:'',kw2:'',kw3:''},{title:'',kw1:'',kw2:'',kw3:''}],
   slide06callout:'',
-  compAlts:[{domain:'',label:''},{domain:'',label:''},{domain:'',label:''},
-            {domain:'',label:''},{domain:'',label:''},{domain:'',label:''}],
+  compAlts: [{domain:'',label:''},{domain:'',label:''},{domain:'',label:''},{domain:'',label:''}],
   slide07subtitle:'',
-  monthlyPrice:'$1,500', cmsType:'', timelineM3:'', closingPara:'',
+  clientDR:'', clientKeywords:'', clientTraffic:'', clientRefDomains:'', slide04callout:'',
+  monthlyPrice:'$2,500', cmsType:'Shopify', timelineM3:'', closingPara:'',
+  peekabooId: '',
 };
+
+const D = Object.assign({}, PREFILL);
+
+// ─────────────────────────────────────────────
+// DEMO DATA — Hockey Stickman (live Peekaboo brand)
+// ─────────────────────────────────────────────
+const DEMO = {
+  clientName: 'Hockey Stickman',
+  clientDomain: 'hockeystickman.ca',
+  clientLogo: '',
+  clientColor: '#CC1F1F',
+  clientDR: '28',
+  clientKeywords: '4,200',
+  clientTraffic: '18,500',
+  clientRefDomains: '310',
+  proposalDate: 'June 2026',
+  buyerType: 'Hockey Players & Parents',
+  peekabooId: 'b56fd91f-af69-41ce-b1c6-372f5edfcb3b',
+  slide01headline: 'Canada\'s Pro Stock Specialist Has an AI Blind Spot.',
+  slide01subline: 'You rank #1 against every competitor. AI still sends buyers to American sites. Here\'s how we fix that.',
+  slide03title: 'The Hockey Stick Buying Journey Has Moved to AI.',
+  slide03subtitle: 'ChatGPT, Perplexity, and Gemini now answer "best pro stock hockey sticks" before Google does. Hockey Stickman doesn\'t appear in 8 of 10 AI answers.',
+  gaps: [
+    {title:'llms.txt describes a checkout flow, not an expert', body:'Your llms.txt exists but only describes Shopify\'s commerce protocol. AI reads this and classifies you as a store, not a knowledge source. No mention of your 290 articles, Pro Blackout line, or 15 years of pro stock expertise.'},
+    {title:'290 articles, zero hub page — AI won\'t crawl a scattered archive', body:'You\'ve written about flex ratings, stick length, composite vs wood — all the queries where you score zero. But the content lives in 290 individual blog posts. AI prefers one FAQ-structured authority page over an archive.'},
+    {title:'No "Pro Stock in Canada" guide — a US site owns that query', body:'prostockhockey.com earns 40 AI citations because it owns the informational category. You sell pro stock. You\'re Canadian. You\'ve been doing this since 2010. But there\'s no page that says so in a way AI can cite.'},
+    {title:'Schema markup missing across product and article pages', body:'Without FAQ and HowTo schema, AI models can\'t extract structured answers from your content. Competitors with schema get cited directly — your identical content is skipped.'}
+  ],
+  comps: [
+    {domain:'prostockhockey.com', dr:'52', kw:'28,000', traffic:'210,000', aiScore:'0'},
+    {domain:'bauer.com',          dr:'68', kw:'41,000', traffic:'380,000', aiScore:'4'},
+    {domain:'ccmhockey.com',       dr:'65', kw:'35,000', traffic:'290,000', aiScore:'2'},
+    {domain:'hockeyshot.com',      dr:'48', kw:'22,000', traffic:'140,000', aiScore:'0'}
+  ],
+  aiScore: '5',
+  aiRank: '#1 in category',
+  aiCitations: '5',
+  aiChats: '140',
+  slide05callout: 'Reddit earns 42 citations in your category. Your 290-article blog earns zero. AI prefers community consensus over unanswered product pages.',
+  prompts: [
+    {text:'Best pro stock hockey sticks Canada',      mentions:'14', score:'0',  status:''},
+    {text:'Hockey stick flex guide for beginners',    mentions:'14', score:'36', status:'warn'},
+    {text:'Pro stock vs retail hockey sticks',        mentions:'14', score:'0',  status:''},
+    {text:'Where to buy pro stock sticks online',     mentions:'14', score:'0',  status:''},
+    {text:'Best hockey sticks under $200',            mentions:'14', score:'0',  status:''},
+    {text:'Bauer vs CCM hockey sticks comparison',    mentions:'14', score:'0',  status:''}
+  ],
+  sources: [
+    {domain:'reddit.com',              mentions:'42'},
+    {domain:'prostockhockey.com',      mentions:'40'},
+    {domain:'bauer.com',               mentions:'18'},
+    {domain:'hockeymonkey.com',        mentions:'12'},
+    {domain:'ccmhockey.com',           mentions:'9'},
+    {domain:'hockeystickman.com',      mentions:'5'}
+  ],
+  kwClusters: [
+    {title:'Pro Stock Sticks',   kw1:'pro stock hockey sticks canada', kw2:'pro stock sticks vs retail', kw3:'cheap pro stock hockey sticks'},
+    {title:'Stick Selection',    kw1:'hockey stick flex guide',        kw2:'best hockey stick for beginner', kw3:'what flex hockey stick do i need'},
+    {title:'Brand Comparisons',  kw1:'bauer vs ccm hockey sticks',     kw2:'best hockey stick brand 2025', kw3:'hockey stick buying guide canada'}
+  ],
+  slide06callout: 'These three clusters cover 74% of all hockey stick buying intent queries on Google and AI — and you rank in the top 5 for fewer than 12% of them.',
+  compAlts: [
+    {domain:'bauer.com',          label:'Bauer'},
+    {domain:'ccmhockey.com',      label:'CCM'},
+    {domain:'prostockhockey.com', label:'Pro Stock Hockey'},
+    {domain:'hockeyshot.com',     label:'HockeyShot'}
+  ],
+  slide07subtitle: 'These are the brands hockey players already know. When they search for better value or Canadian options, Hockey Stickman needs to be the answer AI returns.',
+  slide04callout: 'Hockey Stickman has more original content than any competitor in the category. The gap isn\'t expertise — it\'s structure and AI-readable formatting.',
+  monthlyPrice: '$2,500',
+  cmsType: 'Shopify',
+  timelineM3: 'AI citation visibility established for pro stock and stick selection categories',
+  closingPara: 'Hockey Stickman is already the most knowledgeable retailer in the category. We make that expertise visible to the AI models that now control where buyers start their journey.',
+  includeReddit: true,
+  buyerType: 'Hockey Players & Parents',
+};
+
+function loadDemo() {
+  if (!confirm('Load Hockey Stickman demo data? This will replace your current form data.')) return;
+  Object.assign(D, DEMO);
+  try { localStorage.setItem('pb_data', JSON.stringify(D)); } catch(e){}
+  // Rebuild ALL dynamic fields (comps, prompts, sources, gaps, kw clusters) from fresh D
+  buildDynamicFields();
+  // Sync flat inputs (text fields, colours, logo)
+  syncInputsToD();
+  // Re-render the current step to show updated state
+  renderStep(currentStep);
+  // Flash the button green briefly
+  const btn = event && event.target && event.target.closest('button');
+  if (btn) { const orig = btn.innerHTML; btn.innerHTML = '✓ Demo loaded'; btn.style.color='#16a34a'; btn.style.borderColor='#86efac'; setTimeout(()=>{ btn.innerHTML=orig; btn.style.color=''; btn.style.borderColor=''; }, 1800); }
+}
 
 let currentStep = 0;
 const STEPS = [
-  {label:'Your Agency'}, {label:'Client Info'}, {label:'The Hook'},
-  {label:'The Gaps'}, {label:'SEO Data'}, {label:'AI Visibility'},
-  {label:'Keywords & Close'}, {label:'Generate'},
+  {label:'Agency'},
+  {label:'Client'},
+  {label:'Cover + Gaps'},
+  {label:'SEO Data'},
+  {label:'AI Data'},
+  {label:'Keywords'},
+  {label:'Pricing'},
+  {label:'Generate'},
 ];
 
 // ─────────────────────────────────────────────
@@ -402,6 +588,8 @@ window.onload = function() {
   buildDynamicFields();
   renderStep(0);
   syncInputsToD();
+  loadDfsAuth();
+  loadPeekAuth();
 };
 
 function buildSidebar() {
@@ -430,12 +618,13 @@ function buildDynamicFields() {
       </div>
     </div>`).join('');
 
-  // Competitor rows
+  // Competitor rows (now with aiScore column)
   const cr = document.getElementById('compRows');
   cr.innerHTML = D.comps.map((c,i) => `
     <div class="comp-row">
       <input type="text" id="comp${i}domain" placeholder="zoominfo.com" oninput="saveComp(${i})" value="${esc(c.domain)}">
       <input type="text" id="comp${i}dr" placeholder="82" oninput="saveComp(${i})" value="${esc(c.dr)}">
+      <input type="text" id="comp${i}aiScore" placeholder="12" oninput="saveComp(${i})" value="${esc(c.aiScore||'')}">
       <input type="text" id="comp${i}kw" placeholder="42,000" oninput="saveComp(${i})" value="${esc(c.kw)}">
       <input type="text" id="comp${i}traffic" placeholder="180,000" oninput="saveComp(${i})" value="${esc(c.traffic)}">
     </div>`).join('');
@@ -446,11 +635,11 @@ function buildDynamicFields() {
     <div class="prompt-row">
       <input type="text" id="prompt${i}text" placeholder="best CRM enrichment tools" oninput="savePrompt(${i})" value="${esc(p.text)}">
       <input type="text" id="prompt${i}mentions" placeholder="0" oninput="savePrompt(${i})" value="${esc(p.mentions)}">
-      <input type="text" id="prompt${i}score" placeholder="5/100" oninput="savePrompt(${i})" value="${esc(p.score)}">
+      <input type="text" id="prompt${i}score" placeholder="5" oninput="savePrompt(${i})" value="${esc(p.score)}">
       <select id="prompt${i}status" onchange="savePrompt(${i})">
         <option value="ok" ${p.status==='ok'?'selected':''}>Green</option>
         <option value="warn" ${p.status==='warn'?'selected':''}>Orange</option>
-        <option value="red" ${p.status==='red'?'selected':''}>Red</option>
+        <option value="" ${ (!p.status||p.status==='')?'selected':''}>Red</option>
       </select>
     </div>`).join('');
 
@@ -459,7 +648,7 @@ function buildDynamicFields() {
   sr.innerHTML = D.sources.map((s,i) => `
     <div class="source-row">
       <input type="text" id="source${i}domain" placeholder="g2.com" oninput="saveSource(${i})" value="${esc(s.domain)}">
-      <input type="text" id="source${i}mentions" placeholder="24 mentions" oninput="saveSource(${i})" value="${esc(s.mentions)}">
+      <input type="text" id="source${i}mentions" placeholder="24" oninput="saveSource(${i})" value="${esc(s.mentions)}">
     </div>`).join('');
 
   // Keyword clusters
@@ -491,7 +680,8 @@ function syncInputsToD() {
     'slide01headline','slide01subline','slide03title','slide03subtitle',
     'clientDR','clientKeywords','clientTraffic','clientRefDomains','slide04callout',
     'aiScore','aiRank','aiCitations','aiChats','slide05callout',
-    'slide06callout','slide07subtitle','monthlyPrice','cmsType','timelineM3','closingPara'];
+    'slide06callout','slide07subtitle','monthlyPrice','cmsType','timelineM3','closingPara',
+    'peekabooId'];
   fields.forEach(f => {
     const el = document.getElementById(f);
     if (el) el.value = D[f] || '';
@@ -499,6 +689,8 @@ function syncInputsToD() {
   updateColorPreview('agency');
   updateColorPreview('client');
   updateLogoPreview();
+  const rEl = document.getElementById('includeReddit');
+  if (rEl) rEl.checked = D.includeReddit !== false;
 }
 
 // ─────────────────────────────────────────────
@@ -511,10 +703,12 @@ function save() {
     'slide01headline','slide01subline','slide03title','slide03subtitle',
     'clientDR','clientKeywords','clientTraffic','clientRefDomains','slide04callout',
     'aiScore','aiRank','aiCitations','aiChats','slide05callout',
-    'slide06callout','slide07subtitle','monthlyPrice','cmsType','timelineM3','closingPara'];
+    'slide06callout','slide07subtitle','monthlyPrice','cmsType','timelineM3','closingPara',
+    'peekabooId'];
   fields.forEach(f => { const el = document.getElementById(f); if(el) D[f] = el.value; });
   const cc = document.getElementById('clientColor'); if(cc) D.clientColor = cc.value;
   const ac = document.getElementById('agencyColor'); if(ac) D.agencyColor = ac.value;
+  const rEl = document.getElementById('includeReddit'); if(rEl) D.includeReddit = rEl.checked;
   try { localStorage.setItem('pb_data', JSON.stringify(D)); } catch(e){}
 }
 
@@ -523,14 +717,455 @@ function loadFromStorage() {
     const s = localStorage.getItem('pb_data');
     if(s) Object.assign(D, JSON.parse(s));
   } catch(e){}
+  const rEl = document.getElementById('includeReddit');
+  if (rEl) rEl.checked = D.includeReddit !== false;
 }
 
 function saveGap(i) { D.gaps[i].title = document.getElementById(`gap${i}title`).value; D.gaps[i].body = document.getElementById(`gap${i}body`).value; save(); }
-function saveComp(i) { ['domain','dr','kw','traffic'].forEach(f => D.comps[i][f] = document.getElementById(`comp${i}${f}`).value); save(); }
+function saveComp(i) { ['domain','dr','aiScore','kw','traffic'].forEach(f => D.comps[i][f] = document.getElementById('comp'+i+f).value); save(); }
 function savePrompt(i) { ['text','mentions','score','status'].forEach(f => D.prompts[i][f] = document.getElementById(`prompt${i}${f}`).value); save(); }
 function saveSource(i) { D.sources[i].domain = document.getElementById(`source${i}domain`).value; D.sources[i].mentions = document.getElementById(`source${i}mentions`).value; save(); }
 function saveKw(i) { ['title','kw1','kw2','kw3'].forEach(f => D.kwClusters[i][f] = document.getElementById(`kw${i}${f}`).value); save(); }
 function saveCompAlt(i) { D.compAlts[i].domain = document.getElementById(`compAlt${i}domain`).value; D.compAlts[i].label = document.getElementById(`compAlt${i}label`).value; save(); }
+
+// ─────────────────────────────────────────────
+// DATAFORSEO AUTO-FILL
+// The API token is kept in its OWN localStorage key (pb_dfs_auth) and is never
+// written into D — so it cannot leak into the generated/downloaded proposal.
+// ─────────────────────────────────────────────
+const DFS_BASE = 'https://api.dataforseo.com';
+
+function saveDfsAuth() {
+  const el = document.getElementById('dfsAuth');
+  try { localStorage.setItem('pb_dfs_auth', ((el && el.value) || '').trim()); } catch(e){}
+}
+function loadDfsAuth() {
+  try {
+    const v = localStorage.getItem('pb_dfs_auth');
+    const el = document.getElementById('dfsAuth');
+    if (el && v) el.value = v;
+  } catch(e){}
+}
+function dfsCleanDomain(s) {
+  return String(s||'').trim().replace(/^https?:\/\//i,'').replace(/^www\./i,'').replace(/\/.*$/,'').toLowerCase();
+}
+function dfsFmt(n) {
+  if (n == null || isNaN(n)) return '';
+  return Math.round(n).toLocaleString('en-US');
+}
+function dfsStatus(msg, color) {
+  const el = document.getElementById('dfsStatus');
+  if (el) { el.textContent = msg; el.style.color = color || 'var(--ink3)'; }
+}
+
+async function dfsOverview(auth, domain) {
+  const payload = [{ target: domain, location_name: 'United States', language_name: 'English' }];
+  let res;
+  try {
+    res = await fetch(DFS_BASE + '/v3/dataforseo_labs/google/domain_rank_overview/live', {
+      method: 'POST',
+      headers: { 'Authorization': 'Basic ' + auth, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch(e) { return { error: 'network' }; }
+  if (res.status === 401) return { error: 'auth' };
+  let env;
+  try { env = await res.json(); } catch(e) { return { error: 'HTTP ' + res.status }; }
+  if (env.status_code === 40100 || env.status_code === 40200) return { error: 'auth' };
+  const task = (env.tasks || [])[0];
+  if (!task || task.status_code !== 20000) return { error: (task && task.status_message) || 'no data' };
+  const items = (((task.result || [])[0] || {}).items) || [];
+  if (!items.length) return { keywords: 0, traffic: 0 };
+  const organic = (items[0].metrics || {}).organic || {};
+  return { keywords: organic.count || 0, traffic: organic.etv || 0 };
+}
+
+async function dfsBacklinks(auth, domain) {
+  // Returns domain_rank (0–100) and referring_domains count from DataForSEO Backlinks API
+  const payload = [{ target: domain, include_subdomains: true }];
+  let res;
+  try {
+    res = await fetch(DFS_BASE + '/v3/backlinks/summary/live', {
+      method: 'POST',
+      headers: { 'Authorization': 'Basic ' + auth, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch(e) { return { error: 'network' }; }
+  if (res.status === 401) return { error: 'auth' };
+  let env;
+  try { env = await res.json(); } catch(e) { return { error: 'HTTP ' + res.status }; }
+  if (env.status_code === 40100 || env.status_code === 40200) return { error: 'auth' };
+  const task = (env.tasks || [])[0];
+  if (!task || task.status_code !== 20000) return { error: (task && task.status_message) || 'no data' };
+  const result = ((task.result || [])[0]) || {};
+  return {
+    domainRank: result.rank != null ? Math.round(result.rank) : null,
+    refDomains: result.referring_domains != null ? result.referring_domains : null,
+  };
+}
+
+async function fetchDataForSEO() {
+  const btn  = document.getElementById('dfsBtn');
+  const auth = (document.getElementById('dfsAuth').value || '').trim();
+  if (!auth) { dfsStatus('Enter your DataForSEO API token first.', '#dc2626'); return; }
+  saveDfsAuth();
+
+  const clientEl = document.getElementById('clientDomain');
+  const clientDomain = dfsCleanDomain(D.clientDomain || (clientEl && clientEl.value) || '');
+  const targets = [];
+  if (clientDomain) targets.push({ kind: 'client', domain: clientDomain });
+  D.comps.forEach((c, i) => {
+    const el = document.getElementById('comp'+i+'domain');
+    const dom = dfsCleanDomain(c.domain || (el && el.value) || '');
+    if (dom) targets.push({ kind: 'comp', index: i, domain: dom });
+  });
+  if (!targets.length) {
+    dfsStatus('No domains found. Add the client domain in Step 1 and/or competitor domains below.', '#dc2626');
+    return;
+  }
+
+  btn.disabled = true;
+  const oldLabel = btn.textContent;
+  btn.textContent = 'Fetching…';
+  let filled = 0, failed = 0, authFail = false;
+
+  for (let t = 0; t < targets.length; t++) {
+    const tg = targets[t];
+    dfsStatus(`Fetching ${tg.domain} (${t+1}/${targets.length}) — keywords + backlinks…`);
+
+    // Run both calls in parallel per domain
+    const [r, bl] = await Promise.all([
+      dfsOverview(auth, tg.domain),
+      dfsBacklinks(auth, tg.domain),
+    ]);
+
+    if ((r && r.error === 'auth') || (bl && bl.error === 'auth')) { authFail = true; break; }
+    if ((!r || r.error) && (!bl || bl.error)) { failed++; continue; }
+
+    if (tg.kind === 'client') {
+      if (r && !r.error) {
+        D.clientKeywords = dfsFmt(r.keywords);
+        D.clientTraffic  = dfsFmt(r.traffic);
+        const kEl = document.getElementById('clientKeywords'); if (kEl) kEl.value = D.clientKeywords;
+        const tEl = document.getElementById('clientTraffic');  if (tEl) tEl.value = D.clientTraffic;
+      }
+      if (bl && !bl.error) {
+        if (bl.domainRank != null) {
+          D.clientDR = String(bl.domainRank);
+          const dEl = document.getElementById('clientDR'); if (dEl) dEl.value = D.clientDR;
+        }
+        if (bl.refDomains != null) {
+          D.clientRefDomains = dfsFmt(bl.refDomains);
+          const rEl = document.getElementById('clientRefDomains'); if (rEl) rEl.value = D.clientRefDomains;
+        }
+      }
+    } else {
+      const i = tg.index;
+      if (r && !r.error) {
+        D.comps[i].kw      = dfsFmt(r.keywords);
+        D.comps[i].traffic = dfsFmt(r.traffic);
+        const kEl = document.getElementById('comp'+i+'kw');      if (kEl) kEl.value = D.comps[i].kw;
+        const tEl = document.getElementById('comp'+i+'traffic'); if (tEl) tEl.value = D.comps[i].traffic;
+      }
+      if (bl && !bl.error && bl.domainRank != null) {
+        D.comps[i].dr = String(bl.domainRank);
+        const dEl = document.getElementById('comp'+i+'dr'); if (dEl) dEl.value = D.comps[i].dr;
+      }
+    }
+    filled++;
+  }
+
+  btn.disabled = false;
+  btn.textContent = oldLabel;
+  save();
+
+  if (authFail) { dfsStatus('Invalid DataForSEO token — check it and try again.', '#dc2626'); return; }
+  let msg = `✓ Filled Domain Rank + Keywords + Traffic${filled > 0 ? ' for ' + filled + ' domain' + (filled===1?'':'s') : ''}.`;
+  if (failed) msg += ` ${failed} returned no data.`;
+  msg += ' Ref. Domains filled for client.';
+  dfsStatus(msg, filled ? '#16a34a' : 'var(--ink3)');
+}
+
+// ─────────────────────────────────────────────
+// PEEKABOO AUTO-FILL — uses /snapshot endpoint (~0.3s, pre-computed)
+// API key stored in pb_peek_auth (localStorage only — never exported into proposal)
+// ─────────────────────────────────────────────
+const PEEK_BASE = 'https://www.aipeekaboo.com/api/v1';
+
+function savePeekAuth() {
+  const el = document.getElementById('peekabooApiKey');
+  const val = (el && el.value || '').trim();
+  if (val) {
+    try { localStorage.setItem('pb_peek_auth', val); } catch(e){}
+    const st = document.getElementById('peekAuthStatus');
+    if (st) { st.textContent = '✓ Saved'; st.style.color = '#16a34a'; }
+  }
+}
+function loadPeekAuth() {
+  try {
+    const val = localStorage.getItem('pb_peek_auth') || '';
+    const el = document.getElementById('peekabooApiKey');
+    if (el && val) {
+      el.value = val;
+      const st = document.getElementById('peekAuthStatus');
+      if (st) { st.textContent = '✓ Saved'; st.style.color = '#16a34a'; }
+    }
+  } catch(e){}
+}
+function getPeekKey() {
+  try { return localStorage.getItem('pb_peek_auth') || ''; } catch(e){ return ''; }
+}
+
+function peekStatus(msg, color) {
+  const el = document.getElementById('peekabooStatus');
+  if (el) { el.textContent = msg; el.style.color = color || 'var(--ink3)'; }
+}
+
+// ── Brand picker (curl /brands → paste JSON → click to select) ──
+function toggleBrandPicker() {
+  const block = document.getElementById('brandPickerBlock');
+  const btn   = document.getElementById('brandPickerToggleBtn');
+  if (!block || !btn) return;
+  const opening = block.style.display === 'none';
+  block.style.display = opening ? 'block' : 'none';
+  btn.textContent = (opening ? '▾' : '▸') + ' Don\'t know your Brand ID? List all brands on your account';
+  if (opening) {
+    const apiKey = getPeekKey();
+    const cmdEl = document.getElementById('brandListCmd');
+    if (cmdEl) {
+      if (apiKey) {
+        cmdEl.textContent = `curl -s -H "X-API-Key: ${apiKey}" "${PEEK_BASE}/brands"`;
+      } else {
+        cmdEl.textContent = '⚠ Enter your API key above first, then re-open this panel.';
+      }
+    }
+  }
+}
+
+function copyBrandListCmd() {
+  const cmd = document.getElementById('brandListCmd');
+  if (!cmd) return;
+  navigator.clipboard.writeText(cmd.textContent)
+    .then(() => {
+      const btn = event.target;
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+}
+
+function parseBrandsJson() {
+  const ta = document.getElementById('brandListPaste');
+  const results = document.getElementById('brandListResults');
+  if (!ta || !ta.value.trim()) {
+    if (results) results.innerHTML = '<div style="color:#dc2626;font-size:12px">Paste the JSON from your terminal first.</div>';
+    return;
+  }
+  const raw = ta.value.trim();
+  let json = null;
+  let truncated = false;
+
+  // Pass 1: clean parse
+  try { json = JSON.parse(raw); } catch(e) {}
+
+  // Pass 2: terminal garbled the output — find the JSON blob inside the noise
+  if (!json) {
+    const start = raw.indexOf('{"success"');
+    if (start !== -1) {
+      const sub = raw.slice(start);
+      // Walk backwards from end to find last valid closing brace
+      for (let i = sub.length - 1; i >= 0; i--) {
+        if (sub[i] === '}') {
+          try { json = JSON.parse(sub.slice(0, i + 1)); break; } catch(e) {}
+        }
+      }
+    }
+  }
+
+  // Pass 3: JSON is truncated mid-stream — extract individual brand objects via regex
+  if (!json || !Array.isArray(json.data)) {
+    const hits = [];
+    const re = /\{"id":"([0-9a-f-]{36})","name":"([^"]+)","url":"([^"]*)"(?:[^}]*"lastAnalysisAt":("(?:[^"]*)"|\s*null))?/g;
+    let m;
+    while ((m = re.exec(raw)) !== null) {
+      hits.push({ id: m[1], name: m[2], url: m[3], lastAnalysisAt: (m[4] && m[4] !== 'null') ? m[4].replace(/"/g,'') : null });
+    }
+    if (hits.length > 0) { json = { success: true, data: hits }; truncated = true; }
+  }
+
+  if (!json || !json.success || !Array.isArray(json.data) || json.data.length === 0) {
+    if (results) results.innerHTML = '<div style="color:#dc2626;font-size:12px">Could not read brand data. Make sure you paste the curl output — the full line starting with <code>{"success"</code>.</div>';
+    return;
+  }
+
+  const warn = truncated
+    ? '<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:6px;padding:7px 10px;font-size:11px;color:#92400e;margin-bottom:8px">⚠ Terminal output appeared truncated or garbled — extracted what was readable. Re-run curl if any brands are missing.</div>'
+    : '';
+
+  results.innerHTML = warn + '<div style="font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">Click a brand to select it:</div>' +
+    json.data.map(b => {
+      const safeId   = (b.id   || '').replace(/'/g,"\\'");
+      const safeName = (b.name || '').replace(/'/g,"\\'");
+      const lastRun  = b.lastAnalysisAt ? new Date(b.lastAnalysisAt).toLocaleDateString() : 'never';
+      return `<div onclick="selectBrand('${safeId}','${safeName}')" style="cursor:pointer;padding:9px 12px;border-radius:7px;border:1px solid var(--rule);background:var(--paper);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;transition:border-color .15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--rule)'">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--ink);line-height:1.3">${b.name || '(unnamed)'}</div>
+          <div style="font-size:11px;color:var(--ink3)">${b.url || ''} · last run: ${lastRun}</div>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);flex-shrink:0;margin-left:12px">${b.id}</div>
+      </div>`;
+    }).join('');
+}
+
+function selectBrand(id, name) {
+  const el = document.getElementById('peekabooId');
+  if (el) { el.value = id; save(); }
+  // Close picker
+  const block = document.getElementById('brandPickerBlock');
+  const btn   = document.getElementById('brandPickerToggleBtn');
+  if (block) block.style.display = 'none';
+  if (btn)   btn.textContent = '▸ Don\'t know your Brand ID? List all brands on your account';
+  // Clear results
+  const res = document.getElementById('brandListResults');
+  if (res) res.innerHTML = '';
+  peekStatus(`"${name}" selected — click Fetch from Peekaboo.`, '#16a34a');
+}
+
+function showCurlFallback(brandId, apiKey) {
+  const block = document.getElementById('peekCurlBlock');
+  const cmdEl = document.getElementById('peekCurlCmd');
+  if (!block || !cmdEl) return;
+  const cmd = `curl -s -H "X-API-Key: ${apiKey}" \\\n  "${PEEK_BASE}/brands/${brandId}/snapshot"`;
+  cmdEl.textContent = cmd;
+  block.style.display = 'block';
+}
+
+function copyCurlCmd() {
+  const cmd = document.getElementById('peekCurlCmd');
+  if (cmd) navigator.clipboard.writeText(cmd.textContent.replace(/\\\n\s+/g,' '))
+    .then(()=>{ const btn=event.target; const orig=btn.textContent; btn.textContent='Copied!'; setTimeout(()=>btn.textContent=orig,1500); });
+}
+
+function parsePeekabooJson() {
+  const ta = document.getElementById('peekJsonPaste');
+  if (!ta || !ta.value.trim()) { peekStatus('Paste the JSON from your terminal first.', '#dc2626'); return; }
+  let json;
+  try { json = JSON.parse(ta.value.trim()); } catch(e) { peekStatus('Invalid JSON — make sure you pasted the full curl output.', '#dc2626'); return; }
+  applyPeekabooSnap(json);
+}
+
+function applyPeekabooSnap(json) {
+  if (!json || !json.success) {
+    peekStatus('API returned an error: ' + (json && json.error && json.error.message || 'unknown'), '#dc2626');
+    return;
+  }
+  const snap = json.data;
+
+  // ── Visibility metrics ──
+  const vis = snap.visibility || {};
+  D.aiScore     = vis.score != null ? String(vis.score) : '';
+  D.aiRank      = vis.rank  != null ? '#' + vis.rank + ' in category' : '';
+  D.aiCitations = vis.totalCitations != null ? String(vis.totalCitations) : '';
+  D.aiChats     = vis.totalChatsAnalyzed != null ? String(vis.totalChatsAnalyzed) : '';
+  ['aiScore','aiRank','aiCitations','aiChats'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = D[id];
+  });
+
+  // ── Prompts (up to 6) ──
+  const rawPrompts = (snap.prompts || []).slice(0, 6);
+  D.prompts = rawPrompts.map(p => ({
+    text: p.promptText || '',
+    mentions: p.mentions != null ? String(p.mentions) : '',
+    score: p.averageScore != null ? String(p.averageScore) : '',
+    status: p.averageScore > 50 ? 'ok' : p.averageScore > 0 ? 'warn' : ''
+  }));
+  while (D.prompts.length < 6) D.prompts.push({text:'',mentions:'',score:'',status:''});
+  document.querySelectorAll('#promptRows .prompt-row').forEach((el,i) => {
+    ['text','mentions','score','status'].forEach(f => {
+      const inp = document.getElementById('prompt'+i+f);
+      if (inp) inp.value = D.prompts[i][f] || '';
+    });
+  });
+
+  // ── Sources (up to 6) ──
+  const rawSources = (snap.sources || []).slice(0, 6);
+  D.sources = rawSources.map(s => ({
+    domain: s.domain || '',
+    mentions: s.mentions != null ? String(s.mentions) : ''
+  }));
+  while (D.sources.length < 6) D.sources.push({domain:'',mentions:''});
+  document.querySelectorAll('#sourceRows .source-row').forEach((el,i) => {
+    const dEl = document.getElementById('source'+i+'domain'); if (dEl) dEl.value = D.sources[i].domain || '';
+    const mEl = document.getElementById('source'+i+'mentions'); if (mEl) mEl.value = D.sources[i].mentions || '';
+  });
+
+  // ── Competitors (up to 4) ──
+  const rawComps = (snap.competitors || []).slice(0, 4);
+  rawComps.forEach((c, i) => {
+    if (!D.comps[i]) D.comps[i] = {domain:'',dr:'',kw:'',traffic:'',aiScore:''};
+    const domain = (c.url || '').replace(/^https?:\/\//i,'').replace(/^www\./i,'').replace(/\/.*$/,'');
+    D.comps[i].domain  = domain || c.name || '';
+    D.comps[i].aiScore = c.score != null ? String(c.score) : '';
+    const dEl = document.getElementById('comp'+i+'domain');  if (dEl) dEl.value = D.comps[i].domain;
+    const aEl = document.getElementById('comp'+i+'aiScore'); if (aEl) aEl.value = D.comps[i].aiScore;
+  });
+
+  save();
+  const pCount = rawPrompts.length, sCount = rawSources.length, cCount = rawComps.length;
+  const block = document.getElementById('peekCurlBlock');
+  if (block) block.style.display = 'none';
+  peekStatus(
+    `✓ Done — score ${D.aiScore}/100 · ${pCount} prompt${pCount!==1?'s':''} · ${sCount} source${sCount!==1?'s':''} · ${cCount} competitor${cCount!==1?'s':''}.`,
+    '#16a34a'
+  );
+}
+
+async function fetchPeekaboo() {
+  const btn = document.getElementById('peekabooBtn');
+  const idEl = document.getElementById('peekabooId');
+  const brandId = ((idEl && idEl.value) || D.peekabooId || '').trim();
+  if (!brandId) { peekStatus('Enter a Brand ID — find it in the Peekaboo dashboard URL.', '#dc2626'); return; }
+
+  const apiKey = getPeekKey();
+  if (!apiKey) {
+    peekStatus('Enter your Peekaboo API key above first.', '#dc2626');
+    document.getElementById('peekabooApiKey') && document.getElementById('peekabooApiKey').focus();
+    return;
+  }
+
+  btn.disabled = true;
+  const oldLabel = btn.textContent;
+  btn.textContent = 'Fetching…';
+  peekStatus('Calling /snapshot…');
+  const block = document.getElementById('peekCurlBlock');
+  if (block) block.style.display = 'none';
+
+  try {
+    const res = await fetch(PEEK_BASE + '/brands/' + brandId + '/snapshot', {
+      headers: { 'X-API-Key': apiKey }
+    });
+    if (res.status === 401) throw new Error('auth');
+    if (res.status === 404) throw new Error('not_found');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    applyPeekabooSnap(json);
+  } catch(err) {
+    if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+      // CORS block — show curl fallback
+      peekStatus('Browser blocked the request (CORS). Use the curl command below instead:', '#92400E');
+      showCurlFallback(brandId, apiKey);
+    } else if (err.message === 'auth') {
+      peekStatus('API key rejected — check your key in Peekaboo Settings → API.', '#dc2626');
+    } else if (err.message === 'not_found') {
+      peekStatus('Brand ID not found. Check the UUID in your Peekaboo dashboard URL.', '#dc2626');
+    } else {
+      peekStatus('Error: ' + err.message, '#dc2626');
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = oldLabel;
+  }
+}
 
 // ─────────────────────────────────────────────
 // STEP NAV
@@ -639,21 +1274,28 @@ function fillTemplate() {
     ? `<img src="${agencyLogo}" alt="${tok(D.agencyName)}" style="height:clamp(10px,1.4vh,14px);width:auto;opacity:.8">`
     : `<span style="font-size:clamp(10px,1.3vh,13px);font-weight:700;color:var(--ink3)">${tok(D.agencyName)}</span>`;
 
-  const poweredByHtml = (num, total) => `
-    <div class="hdr-right">
-      <div class="snum">${String(num).padStart(2,'0')} / ${String(total).padStart(2,'0')}</div>
-      <a href="${tok(D.agencyWebsite)}" target="_blank" rel="noopener" class="powered">
-        <span>Powered by</span>${agencyLogoHtml}
-      </a>
-    </div>`;
+  const gaLogoInHdrHtml = D.agencyLogo
+    ? `<div style="background:#fff;border-radius:6px;padding:clamp(3px,0.4vh,5px) clamp(6px,0.7vw,10px);display:flex;align-items:center;flex-shrink:0"><img src="${tok(D.agencyLogo)}" class="ga-logo" alt="${tok(D.agencyName)}"></div>`
+    : `<div style="width:clamp(22px,3vh,36px);height:clamp(22px,3vh,36px);border-radius:6px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0">${(D.agencyName||'GA').substring(0,2).toUpperCase()}</div>`;
 
   const hdrHtml = (num, total) => `
     <div class="hdr">
-      <div style="display:flex;align-items:center;gap:10px">
-        <img src="https://www.google.com/s2/favicons?domain=${tok(D.clientDomain)}&sz=128" style="border-radius:10px;width:clamp(26px,3.5vh,40px);height:clamp(26px,3.5vh,40px);object-fit:contain">
-        <span class="tag">SEO / AEO Proposal</span>
+      <div class="hdr-left">
+        <img src="https://www.google.com/s2/favicons?domain=${tok(D.clientDomain)}&sz=128"
+          style="border-radius:8px;width:clamp(28px,3.8vh,44px);height:clamp(28px,3.8vh,44px);object-fit:contain;flex-shrink:0">
+        <div>
+          <div style="font-size:clamp(14px,2vh,20px);font-weight:700;color:var(--ink);line-height:1.2">${tok(D.clientName)||'Your Client'}</div>
+          <div class="tag">SEO / AEO Proposal · ${tok(D.proposalDate)}</div>
+        </div>
       </div>
-      ${poweredByHtml(num,total)}
+      <a href="${tok(D.agencyWebsite)||'#'}" target="_blank" rel="noopener" class="hdr-right" style="text-decoration:none">
+        ${gaLogoInHdrHtml}
+        <div>
+          <div class="ga-name">${tok(D.agencyName)||'Your Agency'}</div>
+          <div class="ga-tagline">SEO + AI Visibility</div>
+        </div>
+        <div class="snum">${String(num).padStart(2,'0')} / ${String(total).padStart(2,'0')}</div>
+      </a>
     </div>`;
 
   // Build gap cards HTML
@@ -663,57 +1305,34 @@ function fillTemplate() {
       <div style="font-size:clamp(14px,1.9vh,18px);color:var(--ink2);line-height:1.6">${tok(g.body)}</div>
     </div>`).join('');
 
-  // Build competitor rows
+  // Build competitor rows (with AI Score column)
   const compTableRows = [
-    `<div style="display:grid;grid-template-columns:2fr 60px 130px 130px 130px;gap:8px;padding:8px 0;border-bottom:2px solid var(--rule)">
-      <div class="col-head">Domain</div><div class="col-head">DR</div><div class="col-head">Keywords</div><div class="col-head">Traffic/mo</div><div class="col-head">Ref. Domains</div>
+    `<div style="display:grid;grid-template-columns:2fr 60px 80px 130px 130px;gap:8px;padding:8px 0;border-bottom:2px solid var(--rule)">
+      <div class="col-head">Domain</div><div class="col-head">Rank</div><div class="col-head">AI Score</div><div class="col-head">Keywords</div><div class="col-head">Traffic/mo</div>
     </div>`,
     // Client row (highlighted)
-    D.clientDomain ? `<div style="display:grid;grid-template-columns:2fr 60px 130px 130px 130px;gap:8px;padding:10px 12px;border:2px solid var(--accent);border-radius:7px;margin:6px 0;background:var(--accent-bg)">
+    D.clientDomain ? `<div style="display:grid;grid-template-columns:2fr 60px 80px 130px 130px;gap:8px;padding:10px 12px;border:2px solid var(--accent);border-radius:7px;margin:6px 0;background:var(--accent-bg)">
       <div style="display:flex;align-items:center;gap:8px">
         <img src="https://www.google.com/s2/favicons?domain=${tok(D.clientDomain)}&sz=64" style="width:16px;height:16px;border-radius:3px">
         <span style="font-size:clamp(14px,2vh,18px);font-weight:700;color:var(--accent)">${tok(D.clientName)} (You)</span>
       </div>
       <div style="font-size:clamp(14px,2vh,18px);font-weight:700;color:var(--ink)">${tok(D.clientDR)}</div>
+      <div style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">${tok(D.aiScore)||'—'}</div>
       <div style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">${tok(D.clientKeywords)}</div>
       <div style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">${tok(D.clientTraffic)}</div>
-      <div style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">${tok(D.clientRefDomains)}</div>
     </div>` : '',
     ...D.comps.filter(c=>c.domain).map(c => `
-    <div style="display:grid;grid-template-columns:2fr 60px 130px 130px 130px;gap:8px;padding:8px 0;border-bottom:1px solid var(--rule)">
+    <div style="display:grid;grid-template-columns:2fr 60px 80px 130px 130px;gap:8px;padding:8px 0;border-bottom:1px solid var(--rule)">
       <div style="display:flex;align-items:center;gap:8px">
         <img src="https://www.google.com/s2/favicons?domain=${tok(c.domain)}&sz=64" style="width:16px;height:16px;border-radius:3px">
         <span style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">${tok(c.domain)}</span>
       </div>
       <div style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">${tok(c.dr)}</div>
+      <div style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">${tok(c.aiScore)||'—'}</div>
       <div style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">${tok(c.kw)}</div>
       <div style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">${tok(c.traffic)}</div>
-      <div style="font-size:clamp(14px,2vh,18px);color:var(--ink2)">—</div>
     </div>`)
   ].join('');
-
-  // Build prompt rows
-  const promptRows = D.prompts.filter(p=>p.text).map(p => {
-    const cls = p.status === 'ok' ? 'ok' : p.status === 'warn' ? 'warn' : 'red';
-    return `<div style="display:grid;grid-template-columns:1fr 80px 80px 100px;gap:8px;padding:8px 10px;border-radius:6px;background:var(--paper2);margin-bottom:6px;border:1px solid var(--rule)">
-      <div style="font-size:clamp(13px,1.8vh,17px);color:var(--ink2)">${tok(p.text)}</div>
-      <div style="font-size:clamp(13px,1.8vh,17px);color:var(--ink3);text-align:center">${tok(p.mentions)}</div>
-      <div style="font-size:clamp(13px,1.8vh,17px);color:var(--ink3);text-align:center">${tok(p.score)}</div>
-      <div style="background:var(--${cls}-bg);border:1px solid var(--${cls}-bd);border-radius:4px;padding:2px 8px;font-size:clamp(11px,1.4vh,13px);font-weight:700;color:var(--${cls});text-align:center;white-space:nowrap">
-        ${cls==='ok'?'Appearing':cls==='warn'?'Weak':'Not found'}
-      </div>
-    </div>`;
-  }).join('');
-
-  // Build source rows
-  const sourceRows = D.sources.filter(s=>s.domain).map(s => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:6px;background:var(--paper2);border:1px solid var(--rule);margin-bottom:5px">
-      <div style="display:flex;align-items:center;gap:8px">
-        <img src="https://www.google.com/s2/favicons?domain=${tok(s.domain)}&sz=32" style="width:14px;height:14px;border-radius:2px">
-        <span style="font-size:clamp(13px,1.8vh,17px);color:var(--ink2)">${tok(s.domain)}</span>
-      </div>
-      <span style="font-size:clamp(12px,1.6vh,15px);color:var(--ink4)">${tok(s.mentions)}</span>
-    </div>`).join('');
 
   // Build kw clusters
   const kwHtml = D.kwClusters.filter(c=>c.title).map(c => `
@@ -726,7 +1345,7 @@ function fillTemplate() {
       </div>`).join('')}
     </div>`).join('');
 
-  // Build comp alt rows for slide 7
+  // Build comp alt rows for slide 6
   const compAltsHtml = D.compAlts.filter(c=>c.domain).map(c => `
     <div style="display:flex;align-items:center;gap:10px;padding:clamp(8px,1.2vh,13px) 0;border-bottom:1px solid var(--rule)">
       <img src="https://www.google.com/s2/favicons?domain=${tok(c.domain)}&sz=64" style="width:20px;height:20px;border-radius:4px;flex-shrink:0">
@@ -749,6 +1368,42 @@ function fillTemplate() {
 
   const n = 12; // total slides
 
+  // Prompt status badge helper
+  function promptBadge(score) {
+    const s = parseFloat(score)||0;
+    if (s > 50) return {bg:'var(--ok-bg)',bd:'var(--ok-bd)',c:'var(--ok)',label:'Cited'};
+    if (s > 0)  return {bg:'var(--warn-bg)',bd:'var(--warn-bd)',c:'var(--warn)',label:'Weak'};
+    return {bg:'var(--red-bg)',bd:'var(--red-bd)',c:'var(--red)',label:'—'};
+  }
+
+  // Build slide 4 prompt rows using promptBadge
+  const slide4PromptRows = D.prompts.filter(p=>p.text).map(p => {
+    const badge = promptBadge(p.score);
+    return `<div style="display:grid;grid-template-columns:1fr 56px 64px;gap:8px;padding:7px 10px;border-radius:6px;background:var(--paper2);margin-bottom:5px;border:1px solid var(--rule);align-items:center">
+      <div style="font-size:clamp(12px,1.6vh,15px);color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${tok(p.text)}</div>
+      <div style="background:${badge.bg};border:1px solid ${badge.bd};border-radius:4px;padding:2px 6px;font-size:clamp(10px,1.2vh,12px);font-weight:700;color:${badge.c};text-align:center;white-space:nowrap">${badge.label}</div>
+      <div style="font-size:clamp(11px,1.4vh,13px);color:var(--ink4);text-align:right;font-family:'DM Mono',monospace">${tok(p.score)?tok(p.score)+'/100':''}</div>
+    </div>`;
+  }).join('');
+
+  // Build slide 4 source chips
+  const slide4SourceChips = D.sources.filter(s=>s.domain).slice(0,6).map(s=>`
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--paper2);border:1px solid var(--rule);border-radius:6px">
+      <img src="https://www.google.com/s2/favicons?domain=${tok(s.domain)}&sz=16" style="width:14px;height:14px;border-radius:2px" onerror="this.style.display='none'">
+      <span style="font-size:clamp(10px,1.3vh,12px);color:var(--ink3);font-weight:500">${tok(s.domain)}</span>
+      ${s.mentions?`<span style="font-size:10px;color:var(--ink4);font-family:'DM Mono',monospace">${tok(s.mentions)}×</span>`:''}
+    </div>`).join('');
+
+  // Deliverables for slide 7
+  const deliverableItems = [
+    ['Content', '8 articles / mo', 'Keyword-targeted articles built to rank on Google and get cited by AI.'],
+    ['On-Page SEO', 'Ongoing', 'Meta titles, headings, and internal linking across every page.'],
+    ['Schema Markup', 'Site-wide', 'FAQ, HowTo, and Organization schema so AI models can understand and cite you.'],
+    ...(D.includeReddit ? [['Reddit Presence', 'Weekly', 'Reddit appears in 40%+ of AI answers. Weekly posts build the brand signals AI uses to recommend you.']] : []),
+    ['Content Refresh', 'Ongoing', 'Existing pages updated with new keyword data. Stale content consolidated.'],
+    ['Monthly Report', 'Monthly', 'Rankings, traffic, and AI citation data every month. You always know what moved.'],
+  ];
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -757,7 +1412,7 @@ function fillTemplate() {
 <title>${tok(D.clientName)} SEO/AEO Proposal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
 <style>
   :root {
@@ -765,273 +1420,426 @@ function fillTemplate() {
     --accent-bg: ${cc.bg};
     --accent-bd: ${cc.bd};
     --accent-dark: ${cc.dark};
+    --ga: ${ac.accent};
+    --ga-bg: ${ac.bg};
+    --ga-bd: ${ac.bd};
+    --ga-dark: ${ac.dark};
     --ink: #171C33; --ink2: #3D4461; --ink3: #717185; --ink4: #A1A1B5;
     --paper: #fff; --paper2: #F9FAFB; --paper3: #F3F4F6; --rule: #E5E7EB;
     --ok: #16a34a; --ok-bg: #f0fdf4; --ok-bd: #bbf7d0;
     --warn: #ea580c; --warn-bg: #fff7ed; --warn-bd: #fed7aa;
     --red: #dc2626; --red-bg: #fef2f2; --red-bd: #fecaca;
   }
-  *{box-sizing:border-box;font-family:"DM Sans",sans-serif}
-  html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#fff}
-  .reveal-viewport,.reveal{width:100%!important;height:100%!important;background:#fff!important}
-  .reveal .slides section{width:100vw!important;height:100vh!important;padding:0!important;background:#fff!important;display:flex!important;flex-direction:column!important;text-align:left!important}
-  .s{width:100vw;height:100vh;padding:3vh 4.5vw 2.5vh;display:flex;flex-direction:column;position:relative;overflow:hidden}
-  .stripe{position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--accent-dark)}
-  .hdr{display:flex;justify-content:space-between;align-items:center;flex-shrink:0;margin-bottom:.6vh}
-  .hdr-right{display:flex;flex-direction:column;align-items:flex-end}
-  .snum{font-family:"DM Mono",monospace;font-size:clamp(10px,1.2vh,13px);color:var(--accent-dark);background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:3px;padding:2px 8px;letter-spacing:.06em}
-  .tag{font-size:clamp(10px,1.2vh,13px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4)}
-  .powered{display:flex;align-items:center;gap:5px;text-decoration:none;margin-top:3px}
-  .powered span{font-size:clamp(8px,1vh,10px);color:var(--ink4)}
-  .divider{height:1px;background:var(--rule);flex-shrink:0;margin-bottom:clamp(10px,1.5vh,18px)}
-  h2{font-size:clamp(22px,3.8vh,42px);font-weight:700;color:var(--ink);margin:0 0 clamp(8px,1.2vh,14px);line-height:1.15;flex-shrink:0}
-  .col-head{font-size:clamp(10px,1.2vh,13px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4)}
-  .rg2{display:grid;grid-template-columns:1fr 1fr}
-  .rg3{display:grid;grid-template-columns:1fr 1fr 1fr}
-  .obox{background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:clamp(10px,1.5vh,18px) clamp(12px,1.5vw,18px)}
+  *{box-sizing:border-box;font-family:"Assistant",sans-serif}
+  html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:var(--paper)}
+  .reveal-viewport,.reveal{width:100%!important;height:100%!important;background:var(--paper)!important}
+  .reveal .slides section{width:100vw!important;height:100vh!important;padding:0!important;background:var(--paper)!important;display:flex!important;flex-direction:column!important;text-align:left!important}
+  /* ── Slide shell ── */
+  .s{width:100vw;height:100vh;display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--paper)}
+  /* Top accent bar — replaces thin left stripe */
+  .stripe{position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent)}
+  /* Header band */
+  .hdr{display:flex;justify-content:space-between;align-items:stretch;flex-shrink:0;
+    background:var(--paper);border-bottom:2px solid var(--ga);overflow:hidden}
+  .hdr-left{display:flex;align-items:center;gap:12px;
+    padding:clamp(10px,1.6vh,18px) clamp(20px,4vw,48px)}
+  /* GA brand zone — right side of every header */
+  .hdr-right{display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);
+    background:var(--ga);padding:0 clamp(20px,3vw,36px);flex-shrink:0}
+  .ga-logo{height:clamp(22px,3vh,36px);width:auto;object-fit:contain;display:block}
+  .ga-name{font-size:clamp(13px,1.7vh,17px);font-weight:800;color:#fff;
+    letter-spacing:-.01em;line-height:1.1;white-space:nowrap}
+  .ga-tagline{font-size:clamp(9px,1.1vh,11px);font-weight:500;color:rgba(255,255,255,.65);
+    letter-spacing:.06em;text-transform:uppercase}
+  .snum{font-family:"DM Mono",monospace;font-size:clamp(11px,1.4vh,14px);font-weight:700;
+    color:rgba(255,255,255,.5);letter-spacing:.06em;
+    border-left:1px solid rgba(255,255,255,.2);padding-left:clamp(10px,1.4vw,16px);
+    white-space:nowrap}
+  .tag{font-size:clamp(9px,1.1vh,11px);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4)}
+  /* Slide body */
+  .body{flex:1;min-height:0;display:flex;flex-direction:column;padding:clamp(16px,2.4vh,28px) clamp(20px,4vw,48px) clamp(14px,2vh,24px)}
+  .divider{height:2px;background:linear-gradient(to right,var(--accent),var(--accent-bd),transparent);flex-shrink:0;margin-bottom:clamp(12px,1.8vh,22px);border-radius:2px}
+  h2{font-size:clamp(22px,3.6vh,40px);font-weight:800;color:var(--ink);margin:0 0 clamp(6px,1vh,12px);line-height:1.15;flex-shrink:0;letter-spacing:-.02em}
+  /* Tables */
+  .col-head{font-size:clamp(10px,1.2vh,12px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4)}
+  /* Grids */
+  .rg2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.4vw,16px)}
+  .rg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(10px,1.4vw,16px)}
+  .obox{background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:clamp(12px,1.7vh,20px) clamp(14px,1.6vw,20px)}
+  /* Callout bar */
+  .callout{flex-shrink:0;padding:clamp(10px,1.4vh,14px) clamp(20px,4vw,48px);background:var(--accent-bg);border-top:1px solid var(--accent-bd);font-size:clamp(12px,1.6vh,15px);color:var(--ink2);font-weight:500;line-height:1.5}
 </style>
 </head>
 <body>
 <div class="reveal"><div class="slides">
 
 <!-- SLIDE 01: Cover -->
-<section><div class="s" style="justify-content:center;gap:clamp(16px,2.5vh,32px)">
-<div class="stripe"></div>
-<div style="display:flex;align-items:center;gap:12px">
-  <img src="https://www.google.com/s2/favicons?domain=${tok(D.clientDomain)}&sz=128" style="border-radius:12px;width:clamp(36px,5vh,54px);height:clamp(36px,5vh,54px);object-fit:contain">
-  <span class="tag">SEO / AEO Proposal</span>
-</div>
-<div>
-  <h2 style="font-size:clamp(28px,5.5vh,62px);margin-bottom:clamp(10px,1.5vh,18px)">${tok(D.slide01headline)||`How ${tok(D.clientName)} Can Own AI Search in Its Category`}</h2>
-  <p style="font-size:clamp(16px,2.4vh,26px);color:var(--ink2);line-height:1.5;margin:0;font-weight:400;max-width:75ch">${tok(D.slide01subline)||`You have the right product. The gap is visibility. Here is how to change that.`}</p>
-</div>
-<div style="display:flex;align-items:center;gap:clamp(16px,2vw,28px);margin-top:clamp(8px,1.5vh,20px)">
-  <a href="${tok(D.agencyWebsite)}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none">
-    <span style="font-size:clamp(10px,1.3vh,14px);color:var(--ink4)">Powered by</span>
-    ${agencyLogoHtml}
+<section><div class="s">
+<div style="background:var(--ga);display:flex;align-items:center;justify-content:space-between;padding:clamp(10px,1.4vh,16px) clamp(20px,4vw,48px);flex-shrink:0">
+  <a href="${tok(D.agencyWebsite)||'#'}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:clamp(10px,1.2vw,14px);text-decoration:none">
+    ${D.agencyLogo ? `<div style="background:#fff;border-radius:8px;padding:clamp(4px,0.5vh,7px) clamp(8px,0.8vw,12px);display:flex;align-items:center"><img src="${tok(D.agencyLogo)}" style="height:clamp(20px,2.8vh,36px);width:auto;object-fit:contain"></div>` : `<div style="height:clamp(24px,3.2vh,40px);padding:0 10px;background:rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;font-size:14px;font-weight:900;color:#fff">${(D.agencyName||'GA').toUpperCase()}</div>`}
+    <div>
+      <div style="font-size:clamp(14px,1.9vh,20px);font-weight:800;color:#fff;line-height:1.1">${tok(D.agencyName)||'Your Agency'}</div>
+      <div style="font-size:clamp(9px,1.1vh,12px);color:rgba(255,255,255,.65);font-weight:500;letter-spacing:.08em;text-transform:uppercase">SEO + AI Visibility · Fully Managed</div>
+    </div>
   </a>
-  <span style="color:var(--rule)">|</span>
-  <span style="font-size:clamp(10px,1.3vh,14px);color:var(--ink4)">Prepared for ${tok(D.clientName)} &middot; ${tok(D.proposalDate)||'2026'}</span>
+  <div style="font-size:clamp(10px,1.3vh,13px);color:rgba(255,255,255,.55);font-weight:500">Prepared for <strong style="color:#fff;font-weight:700">${tok(D.clientName)||'Your Client'}</strong> · ${tok(D.proposalDate)||'2026'}</div>
+</div>
+<div class="body" style="justify-content:center;gap:clamp(20px,3vh,40px)">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:clamp(16px,2.4vh,28px)">
+      <img src="https://www.google.com/s2/favicons?domain=${tok(D.clientDomain)}&sz=128" style="border-radius:12px;width:clamp(40px,5.5vh,60px);height:clamp(40px,5.5vh,60px);object-fit:contain;flex-shrink:0">
+      <div>
+        <div style="font-size:clamp(11px,1.4vh,13px);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:3px">SEO / AEO Proposal</div>
+        <div style="font-size:clamp(14px,2vh,20px);font-weight:700;color:var(--ink4)">${tok(D.proposalDate)||'2026'}</div>
+      </div>
+    </div>
+    <h2 style="font-size:clamp(28px,5.2vh,58px);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:clamp(12px,1.8vh,22px)">${tok(D.slide01headline)||`How ${tok(D.clientName)} Can Own AI Search in Its Category`}</h2>
+    <p style="font-size:clamp(15px,2.2vh,24px);color:var(--ink2);line-height:1.55;margin:0;font-weight:400;max-width:70ch">${tok(D.slide01subline)||`You have the right product. The gap is visibility. Here is how to change that.`}</p>
+  </div>
 </div>
 </div></section>
 
-<!-- SLIDE 02: Why SEO & AEO -->
+<!-- SLIDE 02: Gaps -->
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(2,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh">Why Invest in <span style="color:var(--accent)">SEO &amp; AEO Now</span></h2>
-<div class="rg2" style="gap:clamp(12px,2vw,24px);flex:1;min-height:0;align-items:start">
-  <div style="display:flex;flex-direction:column;gap:clamp(10px,1.4vh,16px)">
-    <div style="background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:clamp(12px,1.7vh,20px) clamp(14px,1.7vw,20px)">
-      <div style="font-size:clamp(13px,1.8vh,18px);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink4);margin-bottom:clamp(6px,0.9vh,10px)">The old playbook</div>
-      <p style="font-size:clamp(14px,2vh,19px);color:var(--ink2);line-height:1.6;margin:0">Buyers used Google to find software. You ranked, they clicked, they converted. SEO meant keywords and backlinks.</p>
-    </div>
-    <div style="background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:10px;padding:clamp(12px,1.7vh,20px) clamp(14px,1.7vw,20px)">
-      <div style="font-size:clamp(13px,1.8vh,18px);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-dark);margin-bottom:clamp(6px,0.9vh,10px)">The new reality</div>
-      <p style="font-size:clamp(14px,2vh,19px);color:var(--ink2);line-height:1.6;margin:0">Buyers now ask AI. ChatGPT, Perplexity, and Google AI Mode answer with brands they trust. If your content does not signal authority, you are not in the answer.</p>
-    </div>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:clamp(10px,1.4vh,16px)">
-    <div class="obox"><div style="font-size:clamp(22px,4vh,44px);font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:-.03em;margin-bottom:4px">68%</div><div style="font-size:clamp(14px,2vh,19px);color:var(--ink2);line-height:1.5">of B2B buyers now use AI tools during vendor research before contacting sales</div></div>
-    <div class="obox"><div style="font-size:clamp(22px,4vh,44px);font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:-.03em;margin-bottom:4px">3x</div><div style="font-size:clamp(14px,2vh,19px);color:var(--ink2);line-height:1.5">higher close rate from inbound leads who discovered a brand through organic or AI search vs cold outbound</div></div>
-    <div class="obox"><div style="font-size:clamp(22px,4vh,44px);font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:-.03em;margin-bottom:4px">$0</div><div style="font-size:clamp(14px,2vh,19px);color:var(--ink2);line-height:1.5">cost per click once content ranks. Unlike paid ads, compounding organic traffic does not stop when the budget does</div></div>
+<div class="body">
+  <h2>${tok(D.slide03title)||`Why ${tok(D.clientName)} Is Invisible in AI Search Today`}</h2>
+  <p style="font-size:clamp(14px,1.9vh,19px);color:var(--ink2);line-height:1.5;margin:0 0 clamp(12px,1.8vh,20px);font-weight:500;flex-shrink:0">${tok(D.slide03subtitle)||'These are the structural gaps keeping you out of AI answers.'}</p>
+  <div class="rg2" style="flex:1;min-height:0;align-content:start">
+  ${gapCards || `
+    <div class="obox"><div style="font-size:clamp(15px,2.2vh,20px);font-weight:700;color:var(--ink);margin-bottom:8px">No AI Citation Presence</div><div style="font-size:clamp(13px,1.8vh,16px);color:var(--ink2);line-height:1.6">Fill in your gap cards in the builder to see them here.</div></div>
+    <div class="obox"><div style="font-size:clamp(15px,2.2vh,20px);font-weight:700;color:var(--ink);margin-bottom:8px">Thin Content Coverage</div><div style="font-size:clamp(13px,1.8vh,16px);color:var(--ink2);line-height:1.6">Add your specific gaps to make this slide powerful.</div></div>`}
   </div>
 </div>
 </div></section>
 
-<!-- SLIDE 03: Gaps -->
+<!-- SLIDE 03: SEO Today -->
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(3,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh">${tok(D.slide03title)||`Why ${tok(D.clientName)} Is Invisible in AI Search Today`}</h2>
-<p style="font-size:clamp(15px,2.1vh,21px);color:var(--ink2);line-height:1.5;margin:0 0 clamp(14px,2vh,22px);font-weight:500">${tok(D.slide03subtitle)||'These are the structural gaps keeping you out of AI answers.'}</p>
-<div class="rg2" style="gap:clamp(10px,1.4vw,16px);flex:1;min-height:0">
-${gapCards || `
-  <div class="obox"><div style="font-size:clamp(15px,2.2vh,22px);font-weight:700;color:var(--ink);margin-bottom:8px">No AI Citation Presence</div><div style="font-size:clamp(14px,1.9vh,18px);color:var(--ink2);line-height:1.6">Fill in your gap cards in the builder to see them here.</div></div>
-  <div class="obox"><div style="font-size:clamp(15px,2.2vh,22px);font-weight:700;color:var(--ink);margin-bottom:8px">Thin Content Coverage</div><div style="font-size:clamp(14px,1.9vh,18px);color:var(--ink2);line-height:1.6">Add your specific gaps to make this slide powerful.</div></div>`}
+<div class="body">
+  <h2><span style="color:var(--accent)">${tok(D.clientName)}</span> in Search Today</h2>
+  <div style="flex:1;min-height:0;overflow-y:auto">${compTableRows}</div>
 </div>
+${D.slide04callout ? `<div class="callout">${tok(D.slide04callout)}</div>` : ''}
 </div></section>
 
-<!-- SLIDE 04: SEO Today -->
+<!-- SLIDE 04: AI Today -->
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(4,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh"><span style="color:var(--accent)">${tok(D.clientName)}</span> in Search Today</h2>
-<div style="flex:1;min-height:0;overflow-y:auto;margin-bottom:clamp(8px,1.2vh,14px)">
-  ${compTableRows}
+<div class="body">
+  <div class="divider"></div>
+  <h2><span style="color:var(--accent)">${tok(D.clientName)}</span> in AI Search Today</h2>
+  <div style="display:grid;grid-template-columns:200px 1fr;gap:clamp(14px,2vw,24px);flex:1;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:clamp(10px,1.4vh,16px)">
+      <div class="obox" style="text-align:center;flex:0 0 auto">
+        <div style="position:relative;width:clamp(80px,12vh,120px);height:clamp(80px,12vh,120px);margin:0 auto 8px">
+          <svg viewBox="0 0 120 120" style="width:100%;height:100%;transform:rotate(-90deg)">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#E5E7EB" stroke-width="12"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="314"
+              stroke-dashoffset="${Math.round(314 * (1 - Math.min(100, Math.max(0, parseFloat(D.aiScore)||0)) / 100))}"/>
+          </svg>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
+            <div style="font-size:clamp(18px,3vh,30px);font-weight:800;color:var(--accent);font-family:'DM Mono',monospace;line-height:1">${tok(D.aiScore)||'—'}</div>
+            <div style="font-size:10px;color:var(--ink4)">/100</div>
+          </div>
+        </div>
+        <div style="font-size:clamp(11px,1.4vh,13px);color:var(--ink4)">AI Visibility Score</div>
+        <div style="font-size:clamp(12px,1.6vh,15px);font-weight:700;color:var(--ink);margin-top:4px">${tok(D.aiRank)||'—'}</div>
+        <div style="font-size:10px;color:var(--ink4)">Category Rank</div>
+      </div>
+      <div class="obox" style="flex:1">
+        <div style="font-size:clamp(10px,1.3vh,12px);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:8px">Citations Found</div>
+        <div style="font-size:clamp(18px,2.8vh,28px);font-weight:800;color:var(--ink);font-family:'DM Mono',monospace">${tok(D.aiCitations)||'0'}</div>
+        <div style="font-size:clamp(10px,1.3vh,12px);color:var(--ink4);margin-top:4px">across ${tok(D.aiChats)||'—'} chats analysed</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:clamp(10px,1.4vh,14px);min-height:0">
+      <div class="obox" style="flex:1;min-height:0;overflow:hidden">
+        <div style="font-size:clamp(10px,1.3vh,12px);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:10px">Prompts Analysed</div>
+        <div style="display:flex;flex-direction:column;gap:5px;overflow-y:auto;max-height:calc(100% - 30px)">
+          ${slide4PromptRows || '<div style="color:var(--ink4);font-size:13px">Add prompts in the builder.</div>'}
+        </div>
+      </div>
+      <div class="obox" style="flex:0 0 auto">
+        <div style="font-size:clamp(10px,1.3vh,12px);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:8px">Who AI Cites Instead</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${slide4SourceChips || '<div style="color:var(--ink4);font-size:13px">Add citation sources in the builder.</div>'}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-${D.slide04callout ? `<div style="padding:clamp(8px,1.1vh,12px) clamp(14px,1.8vw,20px);background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:6px;font-size:clamp(13px,1.8vh,17px);color:var(--accent-dark);font-weight:500">${tok(D.slide04callout)}</div>` : ''}
+<div class="callout">Data: <strong>AI Peekaboo</strong> &middot; ${tok(D.aiChats)||'—'} AI chats analysed${D.slide05callout ? ` &middot; ${tok(D.slide05callout)}` : ''}</div>
 </div></section>
 
-<!-- SLIDE 05: AI Today -->
+<!-- SLIDE 05: Keyword Opportunity -->
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(5,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh"><span style="color:var(--accent)">${tok(D.clientName)}</span> in AI Search Today</h2>
-<div style="display:flex;gap:clamp(10px,1.5vw,18px);margin-bottom:clamp(10px,1.4vh,16px);flex-shrink:0">
-  <div class="obox" style="flex:1;text-align:center"><div style="font-size:clamp(24px,4vh,42px);font-weight:700;color:var(--accent);font-family:'DM Mono',monospace">${tok(D.aiScore)||'—'}</div><div style="font-size:clamp(11px,1.4vh,14px);color:var(--ink4);margin-top:4px">AI Score</div></div>
-  <div class="obox" style="flex:1;text-align:center"><div style="font-size:clamp(16px,2.8vh,28px);font-weight:700;color:var(--ink);font-family:'DM Mono',monospace">${tok(D.aiRank)||'—'}</div><div style="font-size:clamp(11px,1.4vh,14px);color:var(--ink4);margin-top:4px">Rank in Category</div></div>
-  <div class="obox" style="flex:1;text-align:center"><div style="font-size:clamp(24px,4vh,42px);font-weight:700;color:var(--ink);font-family:'DM Mono',monospace">${tok(D.aiCitations)||'—'}</div><div style="font-size:clamp(11px,1.4vh,14px);color:var(--ink4);margin-top:4px">Citations Found</div></div>
-  <div class="obox" style="flex:1;text-align:center"><div style="font-size:clamp(24px,4vh,42px);font-weight:700;color:var(--ink);font-family:'DM Mono',monospace">${tok(D.aiChats)||'—'}</div><div style="font-size:clamp(11px,1.4vh,14px);color:var(--ink4);margin-top:4px">Monthly AI Searches</div></div>
-</div>
-<div class="rg2" style="gap:clamp(10px,1.5vw,16px);flex:1;min-height:0">
-  <div>
-    <div class="col-head" style="margin-bottom:8px">Prompts analysed</div>
-    ${promptRows || '<p style="color:var(--ink4);font-size:14px">Add prompts in the builder.</p>'}
-  </div>
-  <div>
-    <div class="col-head" style="margin-bottom:8px">Top cited sources instead of you</div>
-    ${sourceRows || '<p style="color:var(--ink4);font-size:14px">Add sources in the builder.</p>'}
-    ${D.slide05callout ? `<div style="margin-top:10px;padding:10px 14px;background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:6px;font-size:clamp(13px,1.8vh,16px);color:var(--accent-dark)">${tok(D.slide05callout)}</div>` : ''}
+<div class="body">
+  <div class="divider"></div>
+  <h2>Keyword <span style="color:var(--accent)">Opportunity</span></h2>
+  <div class="rg3" style="gap:clamp(10px,1.5vw,16px);flex:1;min-height:0">
+    ${kwHtml || `<div class="obox"><div style="font-weight:700;color:var(--ink);margin-bottom:8px">Comparison</div><div style="color:var(--ink4);font-size:14px">Add keyword clusters in the builder.</div></div>`}
   </div>
 </div>
+${D.slide06callout ? `<div class="callout">${tok(D.slide06callout)}</div>` : ''}
 </div></section>
 
-<!-- SLIDE 06: Keyword Opportunity -->
+<!-- SLIDE 06: Competitor Capture -->
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(6,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh">Keyword <span style="color:var(--accent)">Opportunity</span></h2>
-<div class="rg3" style="gap:clamp(10px,1.5vw,16px);flex:1;min-height:0">
-${kwHtml || `<div class="obox"><div style="font-weight:700;color:var(--ink);margin-bottom:8px">Comparison</div><div style="color:var(--ink4);font-size:14px">Add keyword clusters in the builder.</div></div>`}
+<div class="body">
+  <div class="divider"></div>
+  <h2>Capturing <span style="color:var(--accent)">Competitor Search Traffic</span></h2>
+  <p style="font-size:clamp(14px,2vh,20px);color:var(--ink2);line-height:1.5;margin:0 0 clamp(12px,1.8vh,18px);font-weight:500;flex-shrink:0">${tok(D.buyerType)||'Buyers'} actively search for alternatives to tools they already use. <span style="color:var(--ink3);font-weight:400">We create content that positions ${tok(D.clientName)} as the answer every time someone asks AI or Google for a better option.</span></p>
+  <div style="display:flex;align-items:stretch;gap:clamp(6px,1vw,12px);flex:1;min-height:0">
+    <div style="flex:1;background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:clamp(10px,1.4vh,18px) clamp(12px,1.4vw,18px);overflow-y:auto">
+      <div style="font-size:clamp(11px,1.4vh,13px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);padding-bottom:8px;border-bottom:1px solid var(--rule);margin-bottom:12px">${tok(D.clientName)} Competitors</div>
+      ${compAltsHtml || '<p style="color:var(--ink4);font-size:14px">Add competitors in the builder.</p>'}
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;flex-shrink:0;width:clamp(28px,3.5vw,44px)">
+      <span style="font-size:clamp(22px,3.5vh,36px);font-weight:700;color:var(--accent)">+</span>
+    </div>
+    <div style="flex:1;background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:8px;padding:clamp(10px,1.4vh,18px) clamp(12px,1.4vw,18px);overflow-y:auto">
+      <div style="font-size:clamp(11px,1.4vh,13px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-dark);padding-bottom:8px;border-bottom:1px solid var(--accent-bd);margin-bottom:12px">Content to Create First</div>
+      ${compAltContentHtml || '<p style="color:var(--ink4);font-size:14px">Add competitors above to see content ideas.</p>'}
+    </div>
+  </div>
 </div>
-${D.slide06callout ? `<div style="margin-top:clamp(8px,1.2vh,14px);padding:clamp(8px,1.1vh,12px) clamp(14px,1.8vw,20px);background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:6px;font-size:clamp(13px,1.8vh,17px);color:var(--accent-dark);font-weight:500;flex-shrink:0">${tok(D.slide06callout)}</div>` : ''}
+<div class="callout">${tok(D.slide07subtitle)||`These are the tools ${tok(D.buyerType)||'your buyers'} already use. When they search for better options, ${tok(D.clientName)} needs to be the answer.`}</div>
 </div></section>
 
-<!-- SLIDE 07: Competitor Capture -->
+<!-- SLIDE 07: What We Deliver -->
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(7,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh">Capturing <span style="color:var(--accent)">Competitor Search Traffic</span></h2>
-<p style="font-size:clamp(16px,2.3vh,23px);color:var(--ink2);line-height:1.5;margin:0 0 clamp(16px,2.4vh,28px);font-weight:500">${tok(D.buyerType)||'Buyers'} actively search for alternatives to tools they already use.<br><span style="color:var(--ink3);font-weight:400">We create content that positions ${tok(D.clientName)} as the answer every time someone asks AI or Google for a better option.</span></p>
-<div style="display:flex;align-items:stretch;gap:clamp(6px,1vw,12px);flex:1;min-height:0">
-  <div style="flex:1;background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:clamp(10px,1.4vh,18px) clamp(12px,1.4vw,18px);overflow-y:auto">
-    <div style="font-size:clamp(13px,1.7vh,17px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);padding-bottom:8px;border-bottom:1px solid var(--rule);margin-bottom:12px">${tok(D.clientName)} Competitors</div>
-    ${compAltsHtml || '<p style="color:var(--ink4);font-size:14px">Add competitors in the builder.</p>'}
+<div class="body">
+  <div class="divider"></div>
+  <h2>What We <span style="color:var(--accent)">Deliver Every Month</span></h2>
+  <div class="rg2" style="gap:clamp(10px,1.4vw,16px);flex:1;min-height:0">
+    ${deliverableItems.map(([title,badge,desc]) => `
+    <div class="obox" style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:clamp(14px,2vh,20px);font-weight:700;color:var(--ink)">${title}</div>
+        <span style="font-size:clamp(9px,1.05vh,11px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-dark);background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:3px;padding:1px 6px;white-space:nowrap;flex-shrink:0">${badge}</span>
+      </div>
+      <div style="font-size:clamp(13px,1.8vh,16px);color:var(--ink3);line-height:1.5">${desc}</div>
+    </div>`).join('')}
   </div>
-  <div style="display:flex;align-items:center;justify-content:center;flex-shrink:0;width:clamp(28px,3.5vw,44px)">
-    <span style="font-size:clamp(22px,3.5vh,36px);font-weight:700;color:var(--accent)">+</span>
-  </div>
-  <div style="flex:1;background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:8px;padding:clamp(10px,1.4vh,18px) clamp(12px,1.4vw,18px);overflow-y:auto">
-    <div style="font-size:clamp(13px,1.7vh,17px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-dark);padding-bottom:8px;border-bottom:1px solid var(--accent-bd);margin-bottom:12px">Content to Create First</div>
-    ${compAltContentHtml || '<p style="color:var(--ink4);font-size:14px">Add competitors above to see content ideas.</p>'}
-  </div>
-</div>
-<div style="margin-top:clamp(10px,1.5vh,16px);padding:clamp(8px,1.1vh,12px) clamp(14px,1.8vw,20px);background:var(--paper2);border:1px solid var(--rule);border-radius:6px;flex-shrink:0">
-  <span style="font-size:clamp(13px,1.8vh,17px);color:var(--ink2)">${tok(D.slide07subtitle)||`These are the tools ${tok(D.buyerType)||'your buyers'} already use. When they search for better options, ${tok(D.clientName)} needs to be the answer.`}</span>
 </div>
 </div></section>
 
-<!-- SLIDE 08: Deliverables -->
+<!-- SLIDE 08: Investment & Timeline -->
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(8,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh">What We <span style="color:var(--accent)">Deliver Every Month</span></h2>
-<p style="font-size:clamp(16px,2.3vh,23px);color:var(--ink2);line-height:1.5;margin:0 0 clamp(16px,2.2vh,24px);font-weight:500">A full managed service covering everything ${tok(D.clientName)} needs to grow in search and AI, executed every month.</p>
-<div class="rg2" style="gap:clamp(10px,1.4vw,16px);flex:1;min-height:0;align-content:start">
-  ${[
-    ['Content','8 High-Quality Content Pieces','Per month','Keyword-targeted articles and landing pages built to rank on Google and get cited by AI.'],
-    ['Schema','Schema Markup Implementation','Site-wide',`Product, FAQ, HowTo, and Organization schema across the ${tok(D.clientName)} site so AI models can understand and cite it correctly.`],
-    ['On-Page','On-Page SEO Optimization','Ongoing','Meta titles, headings, and internal linking across all pages, with every page treated as an entry point for a high-intent buyer.'],
-    ['Reddit','Reddit Presence','Weekly','Reddit is a top cited source in AI answers. Weekly posts in relevant communities build the brand signals AI uses to recommend tools.'],
-    ['Updates','Content Updates and Pruning','Ongoing','Existing pages refreshed with updated keyword targeting. Stale content consolidated or removed as the site grows.'],
-    ['Reports','Monthly Reporting','Monthly','Rankings, traffic, and AI citation data delivered monthly. You always know what moved and what comes next.'],
-  ].map(([_,title,badge,desc]) => `
-  <div style="background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:clamp(12px,1.6vh,18px) clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:6px">
-    <div style="display:flex;align-items:center;gap:8px">
-      <div style="font-size:clamp(14px,2vh,20px);font-weight:700;color:var(--ink)">${title}</div>
-      <span style="font-size:clamp(9px,1.05vh,11px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-dark);background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:3px;padding:1px 6px;white-space:nowrap;flex-shrink:0">${badge}</span>
+<div class="body">
+  <div class="divider"></div>
+  <h2>Your Investment. <span style="color:var(--accent)">What We Deliver and When.</span></h2>
+  <div class="rg2" style="gap:clamp(20px,3vw,38px);flex:1;min-height:0">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2vh,22px)">
+      ${[
+        ['Month 1 · Foundation','Audit, Access & First Deliverables',[
+          'Request access to Google Analytics, Google Search Console, and '+(D.cmsType||'CMS'),
+          'Full SEO and AEO audit, keyword mapping and content gap analysis',
+          '4 high-quality articles drafted, published and indexed',
+          'Schema implementation begins, meta titles and headings optimised',
+        ]],
+        ['Month 2 · Build','Content, On-Page & Community',[
+          'First 8 high-intent articles published and indexed',
+          D.includeReddit ? 'Reddit presence launched, weekly posts in relevant communities' : 'On-page optimisation across all key pages continues',
+          'On-page optimisation across all key pages',
+        ]],
+        ['Month 3 · Compound','Competitor Pages & AEO Refinement',[
+          `Alternatives pages vs. ${tok(D.timelineM3)||'top competitors'} live`,
+          'AI visibility score review and prompt-by-prompt gap closing',
+          'Monthly report delivered, Month 4 priorities aligned',
+        ]],
+      ].map(([label,title,items],i,arr) => `
+      <div style="display:flex;gap:14px">
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:30px">
+          <div style="width:12px;height:12px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:3px"></div>
+          ${i < arr.length-1 ? '<div style="width:2px;flex:1;background:var(--rule);min-height:20px"></div>' : ''}
+        </div>
+        <div style="flex:1">
+          <div style="font-size:clamp(10px,1.2vh,12px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:3px">${label}</div>
+          <div style="font-size:clamp(15px,2vh,20px);font-weight:700;color:var(--ink);margin-bottom:6px">${title}</div>
+          ${items.map(it=>`<div style="font-size:clamp(12px,1.7vh,16px);color:var(--ink3);display:flex;gap:7px;margin-bottom:3px"><span style="color:var(--accent);flex-shrink:0">·</span>${it}</div>`).join('')}
+        </div>
+      </div>`).join('')}
     </div>
-    <div style="font-size:clamp(13px,1.8vh,17px);color:var(--ink3);line-height:1.5">${desc}</div>
-  </div>`).join('')}
+    <div style="display:flex;flex-direction:column;gap:clamp(10px,1.4vh,16px)">
+      <div style="background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:10px;padding:clamp(16px,2.2vh,26px)">
+        <div style="font-size:clamp(10px,1.3vh,12px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-dark);margin-bottom:10px">Monthly Investment</div>
+        <div style="font-family:'DM Mono',monospace;font-size:clamp(28px,4.5vh,50px);font-weight:500;color:var(--accent);letter-spacing:-.04em;line-height:1;margin-bottom:8px">${tok(D.monthlyPrice)||'$2,500'}<span style="font-size:clamp(14px,1.8vh,18px);font-weight:400;color:var(--accent-dark);letter-spacing:0"> / mo</span></div>
+        <div style="font-size:clamp(13px,1.8vh,17px);color:var(--accent-dark);line-height:1.5">Everything in the deliverables slide, executed every month.</div>
+      </div>
+      <div class="obox">
+        <div style="font-size:clamp(10px,1.2vh,12px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);margin-bottom:10px">How It Works</div>
+        ${['Work begins in week one, no ramp-up delay','Monthly strategy call to review results and set priorities','3-month minimum, then cancel anytime with 30 days notice'].map(t=>`
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">
+          <svg style="width:14px;height:14px;flex-shrink:0;margin-top:3px" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span style="font-size:clamp(13px,1.7vh,16px);color:var(--ink2);line-height:1.5">${t}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
 </div>
 </div></section>
 
-<!-- SLIDE 09: Measuring Success -->
+<!-- SLIDE 09: Client Voices (Trustpilot) -->
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(9,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh">How We <span style="color:var(--accent)">Measure Success</span></h2>
-<p style="font-size:clamp(15px,2.1vh,22px);color:var(--ink2);line-height:1.5;margin:0 0 clamp(12px,1.8vh,20px);font-weight:500">We track progress across both traditional search and AI platforms every month.</p>
-<div class="rg3" style="gap:clamp(10px,1.5vw,18px);flex:1;min-height:0">
-  <div style="background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:clamp(10px,1.4vh,16px);display:flex;flex-direction:column">
-    <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/google-search-console-icon.png" style="width:clamp(32px,4.5vh,46px);height:clamp(32px,4.5vh,46px);border-radius:8px;margin-bottom:clamp(8px,1.2vh,14px);object-fit:contain">
-    <div style="font-size:clamp(14px,2vh,21px);font-weight:700;color:var(--ink);margin-bottom:6px">Google Search Console</div>
-    <p style="font-size:clamp(12px,1.6vh,16px);color:var(--ink3);line-height:1.55;flex:1">Every query ${tok(D.clientName)} appears for in Google, with impressions, clicks, and rankings over time.</p>
+<div class="body" style="gap:clamp(8px,1.2vh,14px)">
+  <div class="divider"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+    <h2 style="margin:0">What Our Clients Say</h2>
+    <a href="https://ca.trustpilot.com/review/growthautomated.ai" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:clamp(8px,1vw,12px);text-decoration:none;background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:clamp(5px,0.7vh,9px) clamp(12px,1.5vw,16px)">
+      <span style="color:#00b67a;font-size:clamp(15px,1.9vh,21px);letter-spacing:1px;line-height:1">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <div>
+        <div style="font-size:clamp(12px,1.6vh,16px);font-weight:800;color:var(--ink);line-height:1.1">5.0 <span style="font-weight:400;color:var(--ink3)">Excellent</span></div>
+        <div style="font-size:clamp(10px,1.2vh,12px);color:var(--ink4);line-height:1.3">Verified reviews on <strong style="color:#00b67a">Trustpilot</strong></div>
+      </div>
+    </a>
   </div>
-  <div style="background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:clamp(10px,1.4vh,16px);display:flex;flex-direction:column">
-    <img src="https://images.icon-icons.com/2699/PNG/512/google_analytics_image_logo_icon_168152.png" style="width:clamp(32px,4.5vh,46px);height:clamp(32px,4.5vh,46px);border-radius:8px;margin-bottom:clamp(8px,1.2vh,14px);object-fit:contain">
-    <div style="font-size:clamp(14px,2vh,21px);font-weight:700;color:var(--ink);margin-bottom:6px">Google Analytics 4</div>
-    <p style="font-size:clamp(12px,1.6vh,16px);color:var(--ink3);line-height:1.55;flex:1">Who visits ${tok(D.clientName)}, where they come from, and whether they convert to ${tok(D.buyerType?'customers':D.buyerType)||'conversions'}.</p>
-  </div>
-  <div style="background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:clamp(10px,1.4vh,16px);display:flex;flex-direction:column">
-    ${toolLogoHtml}
-    <div style="font-size:clamp(14px,2vh,21px);font-weight:700;color:var(--ink);margin-bottom:6px">${tok(D.agencyToolName)||tok(D.agencyName)||'AI Tracking'}</div>
-    <p style="font-size:clamp(12px,1.6vh,16px);color:var(--ink3);line-height:1.55;flex:1">${tok(D.agencyToolDesc)||`Tracks whether ${tok(D.clientName)} appears in AI answers when ${tok(D.buyerType)||'buyers'} research solutions in your category.`}</p>
+  <div class="rg2" style="gap:clamp(14px,2vw,22px);flex:1;min-height:0;align-items:stretch">
+
+    <!-- Review Card 1: Brett Bailey -->
+    <div style="background:var(--paper);border:1.5px solid rgba(0,182,122,.25);border-left:4px solid #00b67a;border-radius:12px;padding:clamp(14px,2vh,22px) clamp(14px,2vw,20px);display:flex;flex-direction:column;gap:clamp(6px,0.9vh,10px);min-height:0">
+      <div style="color:#00b67a;font-size:clamp(15px,1.9vh,22px);letter-spacing:2px;line-height:1;flex-shrink:0">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div style="font-size:clamp(12px,1.6vh,17px);font-weight:700;color:var(--ink);line-height:1.3;flex-shrink:0">Understanding and Pursuing the Business Case for AI Answer Engine Optimization</div>
+      <div style="font-size:clamp(9.5px,1.15vh,12px);color:var(--ink3);line-height:1.65;overflow-y:auto;flex:1;min-height:0;scrollbar-width:thin;scrollbar-color:#d1d5db transparent;padding-right:4px">
+        <p style="margin:0 0 .55em 0">"Growth Automated helped our team move from curiosity about AI search, Answer Engine Optimization (AEO), and LLM visibility into a clear, actionable strategy grounded in data, benchmarking, and measurable opportunity.</p>
+        <p style="margin:0 0 .55em 0">As a team focused on marketing, sales enablement, and digital strategy, we knew the shift toward AI-driven discovery was important, but we needed a partner that could help us understand what the opportunity actually looked like, where we stood today, and how to prioritize next steps. Growth Automated delivered exactly that.</p>
+        <p style="margin:0 0 .55em 0">Their process quickly established a deep understanding of our business, culture, values, customer base, and brand positioning. Rather than offering generic recommendations, they built a strategic framework tailored to who we are and how we want to show up in the evolving digital landscape.</p>
+        <p style="margin:0 0 .55em 0">What stood out most was their ability to combine advanced AI visibility analysis, competitive benchmarking, and Answer Engine Optimization insights into practical, data-driven guidance. They provided us with tools and reporting that allowed us to measure our current effectiveness across AI and search ecosystems, compare against competitors, and identify where optimization efforts would create the greatest impact.</p>
+        <p style="margin:0 0 .55em 0">More importantly, they helped us recognize that optimizing for LLMs and AI-powered search is not just a technical SEO exercise — it is a brand, messaging, and customer experience opportunity. Their approach aligned directly with the customer-centric story we are building and gave our leadership team confidence in how to approach what we now see as the next phase of the digital journey.</p>
+        <p style="margin:0 0 .55em 0">Growth Automated operated as a true extension of our existing team. Rahul and his group brought strategic thinking, transparency, expertise, and a collaborative approach that made complex and rapidly evolving concepts understandable and actionable.</p>
+        <p style="margin:0">I would strongly recommend Growth Automated to any organization looking to improve visibility in AI-driven search and LLM platforms, develop a practical Answer Engine Optimization strategy, benchmark digital presence against competitors, build a data-informed roadmap for AI-era marketing, and align AI discoverability with broader brand and customer experience goals. If your organization wants a trusted partner to help navigate the transition from traditional search optimization to AI-first discoverability, Growth Automated is a team you can confidently engage."</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:clamp(8px,1vw,12px);padding-top:clamp(6px,0.9vh,10px);border-top:1px solid var(--rule);flex-shrink:0">
+        <div style="width:clamp(28px,3.4vh,36px);height:clamp(28px,3.4vh,36px);border-radius:50%;background:var(--ga);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:clamp(10px,1.2vh,12px);flex-shrink:0">BB</div>
+        <div>
+          <div style="font-size:clamp(11px,1.4vh,14px);font-weight:700;color:var(--ink)">Brett Bailey, CEO &middot; WBM Technologies</div>
+          <div style="font-size:clamp(10px,1.1vh,12px);color:var(--ink4)">Verified review &middot; Updated May 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review Card 2: Leah Wells -->
+    <div style="background:var(--paper);border:1.5px solid rgba(0,182,122,.25);border-left:4px solid #00b67a;border-radius:12px;padding:clamp(14px,2vh,22px) clamp(14px,2vw,20px);display:flex;flex-direction:column;gap:clamp(6px,0.9vh,10px);min-height:0">
+      <div style="color:#00b67a;font-size:clamp(15px,1.9vh,22px);letter-spacing:2px;line-height:1;flex-shrink:0">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div style="font-size:clamp(12px,1.6vh,17px);font-weight:700;color:var(--ink);line-height:1.3;flex-shrink:0">Valuable AEO Insights and Guidance</div>
+      <div style="font-size:clamp(9.5px,1.15vh,12px);color:var(--ink3);line-height:1.65;overflow-y:auto;flex:1;min-height:0;scrollbar-width:thin;scrollbar-color:#d1d5db transparent;padding-right:4px">
+        <p style="margin:0">"We worked with Rahul at Growth Automated on an Answer Engine Optimization project and found the experience valuable. He brought a forward-looking perspective on search, helped evaluate our visibility using the Peekaboo tool, and provided practical guidance on Reddit, our content strategy, and discoverability. Several of the quick wins he recommended are already being implemented. Rahul was thoughtful, collaborative, and generous with insights."</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:clamp(8px,1vw,12px);padding-top:clamp(6px,0.9vh,10px);border-top:1px solid var(--rule);flex-shrink:0">
+        <div style="width:clamp(28px,3.4vh,36px);height:clamp(28px,3.4vh,36px);border-radius:50%;background:#00b67a;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:clamp(11px,1.3vh,13px);flex-shrink:0">LW</div>
+        <div>
+          <div style="font-size:clamp(11px,1.4vh,14px);font-weight:700;color:var(--ink)">Leah Wells, Director of Marketing &middot; Credit Canada</div>
+          <div style="font-size:clamp(10px,1.1vh,12px);color:var(--ink4)">Verified review &middot; Updated Jan 2026</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 </div></section>
 
-<!-- SLIDE 10: Investment & Timeline -->
+<!-- SLIDE 10: Press Mention (Financial Post) -->
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(10,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh">Your Investment. <span style="color:var(--accent)">What We Deliver and When.</span></h2>
-<div class="rg2" style="gap:clamp(20px,3vw,38px);flex:1;min-height:0;margin-top:clamp(12px,1.8vh,20px)">
-  <div style="display:flex;flex-direction:column;gap:clamp(14px,2vh,22px)">
-    ${[
-      ['Month 1 · Foundation','Audit, Access & First Deliverables',[
-        'Request access to Google Analytics, Google Search Console, and '+(D.cmsType||'CMS'),
-        'Full SEO and AEO audit, keyword mapping and content gap analysis',
-        '4 high-quality articles drafted, published and indexed',
-        'Schema implementation begins, meta titles and headings optimised',
-      ]],
-      ['Month 2 · Build','Content, On-Page & Community',[
-        'First 8 high-intent articles published and indexed',
-        'Reddit presence launched, weekly posts in relevant communities',
-        'On-page optimisation across all key pages',
-      ]],
-      ['Month 3 · Compound','Competitor Pages & AEO Refinement',[
-        `Alternatives pages vs. ${tok(D.timelineM3)||'top competitors'} live`,
-        'AI visibility score review and prompt-by-prompt gap closing',
-        'Monthly report delivered, Month 4 priorities aligned',
-      ]],
-    ].map(([label,title,items],i,arr) => `
-    <div style="display:flex;gap:14px">
-      <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:30px">
-        <div style="width:12px;height:12px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:3px"></div>
-        ${i < arr.length-1 ? '<div style="width:2px;flex:1;background:var(--rule);min-height:20px"></div>' : ''}
-      </div>
-      <div style="flex:1">
-        <div style="font-size:clamp(10px,1.2vh,12px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:3px">${label}</div>
-        <div style="font-size:clamp(15px,2.1vh,21px);font-weight:700;color:var(--ink);margin-bottom:6px">${title}</div>
-        ${items.map(it=>`<div style="font-size:clamp(13px,1.8vh,17px);color:var(--ink3);display:flex;gap:7px;margin-bottom:3px"><span style="color:var(--accent);flex-shrink:0">·</span>${it}</div>`).join('')}
-      </div>
-    </div>`).join('')}
+<div class="body" style="gap:clamp(8px,1.1vh,13px)">
+  <div class="divider"></div>
+
+  <!-- Masthead row -->
+  <div style="display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);flex-shrink:0">
+    <div style="font-size:clamp(9px,1.1vh,11px);font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ink4);white-space:nowrap">As featured in</div>
+    <div style="height:1px;flex:1;background:var(--rule)"></div>
+    <div style="display:flex;align-items:center;gap:clamp(8px,1vw,12px);background:#111827;border-radius:8px;padding:clamp(6px,0.8vh,10px) clamp(12px,1.6vw,18px);flex-shrink:0">
+      <span style="font-size:clamp(15px,2vh,22px);font-weight:900;color:#fff;font-family:Georgia,'Times New Roman',serif;letter-spacing:-.01em">Financial Post</span>
+      <span style="width:1px;height:1.4em;background:rgba(255,255,255,.25);display:inline-block"></span>
+      <span style="font-size:clamp(9px,1.1vh,12px);color:rgba(255,255,255,.5);font-weight:500">January 12, 2026</span>
+    </div>
+    <div style="height:1px;flex:1;background:var(--rule)"></div>
+    <div style="font-size:clamp(9px,1.1vh,11px);color:var(--ink4);font-style:italic">Newsfile Corp. press release via Financial Post</div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:clamp(10px,1.4vh,16px)">
-    <div style="background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:10px;padding:clamp(16px,2.2vh,26px)">
-      <div style="font-size:clamp(10px,1.3vh,12px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-dark);margin-bottom:10px">Monthly Investment</div>
-      <div style="font-family:'DM Mono',monospace;font-size:clamp(28px,4.5vh,50px);font-weight:500;color:var(--accent);letter-spacing:-.04em;line-height:1;margin-bottom:8px">${tok(D.monthlyPrice)||'$1,500'}<span style="font-size:clamp(14px,1.8vh,18px);font-weight:400;color:var(--accent-dark);letter-spacing:0"> / mo</span></div>
-      <div style="font-size:clamp(13px,1.8vh,17px);color:var(--accent-dark);line-height:1.5">Everything in the deliverables slide, executed every month.</div>
+
+  <!-- Headline -->
+  <div style="flex-shrink:0">
+    <div style="font-size:clamp(14px,2vh,22px);font-weight:800;color:var(--ink);line-height:1.2;letter-spacing:-.01em">Growth Automated Launches <em style="font-style:normal;color:var(--accent)">'Pragmatic AEO'</em> Service to Combat <em style="font-style:normal;color:var(--accent)">60% Zero-Click Search</em> Trend</div>
+    <div style="font-size:clamp(11px,1.3vh,13px);color:var(--ink3);margin-top:4px;font-style:italic">As AI Overviews reshape search behavior, new service helps brands become the answer &mdash; not just rank for keywords</div>
+  </div>
+
+  <!-- Three stat boxes -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1.2vw,14px);flex-shrink:0">
+    <div style="background:var(--accent-bg);border:1.5px solid var(--accent-bd);border-radius:10px;padding:clamp(10px,1.4vh,16px) clamp(12px,1.8vw,18px);display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:clamp(28px,4.5vh,54px);font-weight:900;color:var(--accent);line-height:1;letter-spacing:-.03em">60%</div>
+      <div style="font-size:clamp(10px,1.2vh,12px);color:var(--ink3);margin-top:3px;line-height:1.35">of searches end <strong>without a click</strong> to any website</div>
+      <div style="font-size:clamp(9px,1vh,10px);color:var(--ink4);margin-top:3px">SparkToro 2024</div>
     </div>
-    <div class="obox">
-      <div style="font-size:clamp(10px,1.2vh,12px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);margin-bottom:10px">How It Works</div>
-      ${['Work begins in week one, no ramp-up delay','Monthly strategy call to review results and set priorities','3-month minimum, then cancel anytime with 30 days notice'].map(t=>`
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">
-        <svg style="width:14px;height:14px;flex-shrink:0;margin-top:3px" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        <span style="font-size:clamp(13px,1.8vh,17px);color:var(--ink2);line-height:1.5">${t}</span>
-      </div>`).join('')}
+    <div style="background:var(--ga-bg);border:1.5px solid var(--ga-bd);border-radius:10px;padding:clamp(10px,1.4vh,16px) clamp(12px,1.8vw,18px);display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:clamp(28px,4.5vh,54px);font-weight:900;color:var(--ga);line-height:1;letter-spacing:-.03em">83%</div>
+      <div style="font-size:clamp(10px,1.2vh,12px);color:var(--ink3);margin-top:3px;line-height:1.35">zero-click rate when <strong>AI Overviews</strong> appear at top of results</div>
+      <div style="font-size:clamp(9px,1vh,10px);color:var(--ink4);margin-top:3px">Similarweb Research</div>
     </div>
+    <div style="background:var(--paper2);border:1.5px solid var(--rule);border-radius:10px;padding:clamp(10px,1.4vh,16px) clamp(12px,1.8vw,18px);display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:clamp(28px,4.5vh,54px);font-weight:900;color:var(--ink);line-height:1;letter-spacing:-.03em">30%</div>
+      <div style="font-size:clamp(10px,1.2vh,12px);color:var(--ink3);margin-top:3px;line-height:1.35">of US searches now trigger <strong>AI Overview</strong> summaries</div>
+      <div style="font-size:clamp(9px,1vh,10px);color:var(--ink4);margin-top:3px">Google / Similarweb 2024</div>
+    </div>
+  </div>
+
+  <!-- Two-column: Quotes left, Service details right -->
+  <div class="rg2" style="gap:clamp(14px,2vw,22px);flex:1;min-height:0;align-items:stretch">
+
+    <!-- Left: Both Rahul quotes -->
+    <div style="display:flex;flex-direction:column;gap:clamp(8px,1.1vh,12px);min-height:0">
+      <div style="background:var(--paper);border:1.5px solid var(--rule);border-left:4px solid var(--accent);border-radius:10px;padding:clamp(10px,1.5vh,16px) clamp(12px,1.8vw,16px);flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px">
+        <div style="font-size:clamp(10px,1.35vh,14px);font-weight:700;color:var(--ink);line-height:1.55;font-style:italic">"The rules have changed. When 60 to 80 percent of your potential customers get their answer without ever clicking to a website, you can't just optimize for rankings anymore. You have to optimize for <span style="color:var(--accent);font-style:normal">citation</span>. The question isn't <span style="color:var(--accent);font-style:normal">'Are we on page one?'</span> It's <span style="color:var(--accent);font-style:normal">'Does the AI know who we are and trust us enough to recommend us?'</span>"</div>
+        <div style="font-size:clamp(9px,1.1vh,11px);color:var(--ink4)">&mdash; Rahul Sharma, Founder, Growth Automated</div>
+      </div>
+      <div style="background:var(--paper);border:1.5px solid var(--rule);border-left:4px solid var(--ga);border-radius:10px;padding:clamp(10px,1.5vh,16px) clamp(12px,1.8vw,16px);flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px">
+        <div style="font-size:clamp(10px,1.35vh,14px);font-weight:700;color:var(--ink);line-height:1.55;font-style:italic">"After a quarter of free audits, every prospective client needed a major website overhaul. The gap between where most businesses are and where they need to be for AI visibility is significant. In most cases, brands were surprised at <span style="color:var(--ga);font-style:normal">how AI summarized and described their brand</span>."</div>
+        <div style="font-size:clamp(9px,1.1vh,11px);color:var(--ink4)">&mdash; Rahul Sharma, on findings from the initial audit cohort</div>
+      </div>
+    </div>
+
+    <!-- Right: Service details + bio + link -->
+    <div style="display:flex;flex-direction:column;gap:clamp(8px,1.1vh,12px);min-height:0">
+      <div style="background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:clamp(10px,1.4vh,16px) clamp(12px,1.6vw,16px);flex-shrink:0">
+        <div style="font-size:clamp(10px,1.2vh,12px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:6px">About Pragmatic AEO</div>
+        <div style="font-size:clamp(10px,1.25vh,13px);color:var(--ink3);line-height:1.6">Differentiates itself from theoretical approaches by focusing on practical execution and <strong style="color:var(--ink)">Entity Authority</strong> &mdash; structuring content and brand signals to align with major AI platform retrieval systems. Unlike traditional SEO (keywords &amp; link equity), Pragmatic AEO optimizes for <strong style="color:var(--ink)">machine readability and semantic trust</strong>.</div>
+      </div>
+      <div style="background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:clamp(10px,1.4vh,16px) clamp(12px,1.6vw,16px);flex-shrink:0">
+        <div style="font-size:clamp(10px,1.2vh,12px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:8px">Three Pillars of the Service</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${['Entity Signal Consistency','Structured Data Engineering','Answer-First Content Architecture'].map((p,i)=>`<div style="display:flex;align-items:center;gap:8px"><div style="width:20px;height:20px;border-radius:50%;background:var(--ga);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div><div style="font-size:clamp(10px,1.25vh,13px);font-weight:600;color:var(--ink)">${p}</div></div>`).join('')}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;flex:1;justify-content:flex-end">
+        <div style="display:flex;align-items:center;gap:clamp(8px,1vw,12px);background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:clamp(8px,1.1vh,12px) clamp(10px,1.4vw,14px)">
+          ${D.agencyLogo ? `<div style="background:var(--ga);border-radius:50%;width:clamp(28px,3.4vh,36px);height:clamp(28px,3.4vh,36px);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden"><img src="${tok(D.agencyLogo)}" style="width:80%;height:80%;object-fit:contain"></div>` : `<div style="width:clamp(28px,3.4vh,36px);height:clamp(28px,3.4vh,36px);border-radius:50%;background:var(--ga);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:clamp(11px,1.3vh,13px);flex-shrink:0">RS</div>`}
+          <div style="flex:1;min-width:0">
+            <div style="font-size:clamp(11px,1.3vh,13px);font-weight:700;color:var(--ink)">Rahul Sharma &middot; Founder, Growth Automated</div>
+            <div style="font-size:clamp(9px,1.1vh,11px);color:var(--ink4);line-height:1.4">25+ year digital veteran &middot; Rogers, Microsoft, P&amp;G &middot; Toronto-based &middot; Serving SaaS, professional services &amp; ecommerce</div>
+          </div>
+        </div>
+        <a href="https://financialpost.com/newsfile/280138-growth-automated-launches-pragmatic-aeo-service-to-combat-60-zeroclick-search-trend" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-size:clamp(10px,1.2vh,12px);color:var(--ink4);text-decoration:none;border:1px solid var(--rule);border-radius:6px;padding:clamp(5px,0.6vh,8px) clamp(8px,1vw,12px);align-self:flex-start">
+          <span>&#128240;</span><span>Read the full article on Financial Post &rarr;</span>
+        </a>
+      </div>
+    </div>
+
   </div>
 </div>
 </div></section>
@@ -1040,18 +1848,16 @@ ${hdrHtml(10,n)}
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(11,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh">Next Steps to Getting <span style="color:var(--accent)">${tok(D.clientName)} Visible in AI</span></h2>
-<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(16px,2.5vh,28px);min-height:0">
-  <a href="${tok(D.agencyBooking)||'#'}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;background:var(--accent-bg);border:2px solid var(--accent);border-radius:10px;padding:clamp(18px,3vh,32px);text-decoration:none">
-    <span style="font-size:clamp(20px,3.2vh,32px);font-weight:700;color:var(--accent)">Book a Meeting</span>
+<div class="body" style="justify-content:center;align-items:center;gap:clamp(20px,3vh,36px)">
+  <h2 style="text-align:center;max-width:80ch">Next Steps to Getting <span style="color:var(--accent)">${tok(D.clientName)} Visible in AI</span></h2>
+  <a href="${tok(D.agencyBooking)||'#'}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;background:var(--accent-bg);border:2px solid var(--accent);border-radius:12px;padding:clamp(20px,3.2vh,36px) clamp(48px,6vw,80px);text-decoration:none;width:100%;max-width:600px" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+    <span style="font-size:clamp(20px,3.2vh,32px);font-weight:800;color:var(--accent);letter-spacing:-.02em">Book a Meeting →</span>
   </a>
-  <p style="font-size:clamp(14px,1.9vh,19px);color:var(--ink3);line-height:1.6;text-align:center;max-width:70ch;margin:0 auto">${tok(D.closingPara)||`You have seen where ${tok(D.clientName)} stands, who is getting cited instead, and exactly what we would build to change that.`}</p>
-  <div style="text-align:center">
-    <a href="${tok(D.agencyWebsite)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none">
-      <span style="font-size:clamp(12px,1.5vh,15px);color:var(--ink4)">Powered by</span>
-      ${agencyLogoHtml}
-    </a>
+  <p style="font-size:clamp(14px,1.9vh,19px);color:var(--ink3);line-height:1.65;text-align:center;margin:0;max-width:60ch">${tok(D.closingPara)||`You have seen where ${tok(D.clientName)} stands, who is getting cited instead, and exactly what we would build to change that.`}</p>
+  <div style="display:flex;align-items:center;gap:8px;padding-top:clamp(8px,1.2vh,14px);border-top:1px solid var(--rule);width:100%;max-width:600px;justify-content:center">
+    <span style="font-size:clamp(12px,1.5vh,15px);color:var(--ink4)">Powered by</span>
+    ${agencyLogoHtml}
+    <span style="font-size:clamp(12px,1.5vh,15px);color:var(--ink3);font-weight:600">${tok(D.agencyName)}</span>
   </div>
 </div>
 </div></section>
@@ -1060,10 +1866,18 @@ ${hdrHtml(11,n)}
 <section><div class="s">
 <div class="stripe"></div>
 ${hdrHtml(12,n)}
-<div class="divider"></div>
-<h2 style="margin-top:1vh">About <span style="color:var(--accent)">${tok(D.agencyName)||'Us'}</span></h2>
-<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(10px,1.5vh,18px);min-height:0">
-  <div class="rg3" style="gap:clamp(10px,1.5vw,18px)">
+<div class="body" style="gap:clamp(14px,2vh,22px)">
+  <div class="divider"></div>
+  <!-- GA hero band on About slide -->
+  <div style="background:var(--ga);border-radius:12px;padding:clamp(16px,2.4vh,28px) clamp(20px,3vw,36px);display:flex;align-items:center;gap:clamp(16px,2vw,24px);flex-shrink:0">
+    ${D.agencyLogo ? `<div style="background:#fff;border-radius:10px;padding:clamp(6px,0.8vh,10px) clamp(10px,1vw,16px);display:flex;align-items:center;flex-shrink:0"><img src="${tok(D.agencyLogo)}" style="height:clamp(32px,4.5vh,52px);width:auto;object-fit:contain"></div>` : ''}
+    <div style="flex:1">
+      <div style="font-size:clamp(18px,2.8vh,32px);font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1.1">${tok(D.agencyName)||'Your Agency'}</div>
+      <div style="font-size:clamp(11px,1.4vh,14px);color:rgba(255,255,255,.7);font-weight:500;margin-top:3px;letter-spacing:.04em">SEO + AI Visibility · Fully Managed · ${tok(D.agencyWebsite)||''}</div>
+    </div>
+    ${tok(D.agencyBooking) ? `<a href="${tok(D.agencyBooking)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;padding:clamp(10px,1.4vh,14px) clamp(16px,2vw,24px);background:#fff;border-radius:8px;text-decoration:none;flex-shrink:0"><span style="font-size:clamp(13px,1.7vh,17px);font-weight:800;color:var(--ga)">Book a Call →</span></a>` : ''}
+  </div>
+  <div class="rg3" style="gap:clamp(10px,1.5vw,18px);flex:1;min-height:0">
     <div class="obox">
       <div style="font-size:clamp(11px,1.4vh,14px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:6px">What We Do</div>
       <div style="font-size:clamp(15px,2.2vh,22px);font-weight:700;color:var(--ink);margin-bottom:8px">SEO & AEO that compounds</div>
@@ -1074,9 +1888,9 @@ ${hdrHtml(12,n)}
       <div style="font-size:clamp(15px,2.2vh,22px);font-weight:700;color:var(--ink);margin-bottom:8px">Fully managed service</div>
       <div style="font-size:clamp(12px,1.6vh,15px);color:var(--ink3);line-height:1.55">Monthly strategy call, dedicated async channel, full reporting every month.</div>
     </div>
-    <div style="background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:8px;padding:clamp(10px,1.5vh,18px)">
+    <div style="background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:10px;padding:clamp(12px,1.6vh,20px)">
       <div style="font-size:clamp(11px,1.4vh,14px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">Get Started</div>
-      <div style="font-size:clamp(15px,2.2vh,22px);font-weight:700;color:var(--ink);margin-bottom:8px">Book a 30-min call</div>
+      <div style="font-size:clamp(15px,2.2vh,22px);font-weight:700;color:var(--ink);margin-bottom:10px">Book a 30-min call</div>
       <a href="${tok(D.agencyBooking)||'#'}" target="_blank" rel="noopener" style="font-size:clamp(13px,1.8vh,18px);color:var(--accent);font-weight:600;text-decoration:none">${tok(D.agencyBooking)||'Add your booking link →'}</a>
     </div>
   </div>
