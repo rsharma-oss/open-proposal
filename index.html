@@ -236,18 +236,18 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
       <div class="step-desc">Slide 1 is your cover. The headline should name the client's specific problem or opportunity. Slide 2 shows the structural gaps keeping them out of AI answers.</div>
       <div class="field-group">
         <label>Headline</label>
-        <textarea id="slide01headline" placeholder="e.g. How Floqer Can Own AI Search in CRM Enrichment &amp; GTM Data" oninput="save()" style="min-height:80px"></textarea>
+        <textarea id="slide01headline" placeholder="e.g. How {Client} Can Own AI Search in Their Category" oninput="save()" style="min-height:80px"></textarea>
         <div class="hint">Be specific to their niche. Mention the category they want to own.</div>
       </div>
       <div class="field-group">
         <label>Subline</label>
-        <textarea id="slide01subline" placeholder="e.g. You have the right product. The gap is visibility. Every GTM team asking AI about CRM enrichment gets sent to ZoomInfo or Clay. Here is how to change that." oninput="save()" style="min-height:100px"></textarea>
+        <textarea id="slide01subline" placeholder="e.g. You have the right product. The gap is visibility. Every buyer asking AI about your category gets sent to a competitor. Here is how to change that." oninput="save()" style="min-height:100px"></textarea>
         <div class="hint">Max 2 sentences. State what's broken, then tease the fix.</div>
       </div>
       <div class="section-sep">Gaps (Slide 2)</div>
       <div class="field-group">
         <label>Slide Title</label>
-        <input type="text" id="slide03title" placeholder="e.g. Why Floqer Is Invisible in AI Search Today" oninput="save()">
+        <input type="text" id="slide03title" placeholder="e.g. Why {Client} Is Invisible in AI Search Today" oninput="save()">
       </div>
       <div class="field-group">
         <label>Slide Subtitle</label>
@@ -286,7 +286,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
       <div id="compRows"></div>
       <div class="field-group" style="margin-top:16px">
         <label>Callout <span>— one-line insight below the table</span></label>
-        <input type="text" id="slide04callout" placeholder="e.g. ZoomInfo outranks you on 40+ high-intent keywords you don't appear for at all." oninput="save()">
+        <input type="text" id="slide04callout" placeholder="e.g. Your top competitor outranks you on 40+ high-intent keywords you don't appear for at all." oninput="save()">
       </div>
     </div>
 
@@ -401,12 +401,12 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
       <div class="field-row col3">
         <div class="field-group"><label>Monthly Price</label><input type="text" id="monthlyPrice" placeholder="$1,500" oninput="save()"></div>
         <div class="field-group"><label>CMS Type</label><input type="text" id="cmsType" placeholder="WordPress" oninput="save()"></div>
-        <div class="field-group"><label>Month 3 competitors</label><input type="text" id="timelineM3" placeholder="ZoomInfo, Clearbit, Clay" oninput="save()"></div>
+        <div class="field-group"><label>Month 3 competitors</label><input type="text" id="timelineM3" placeholder="Top 3 competitors" oninput="save()"></div>
       </div>
       <div class="section-sep">Closing (Slide 9)</div>
       <div class="field-group">
         <label>Closing paragraph</label>
-        <textarea id="closingPara" placeholder="e.g. You've seen where Floqer stands, who is getting cited instead, and exactly what we'd build to change that. Every day without content is another day buyers find ZoomInfo instead of Floqer." oninput="save()" style="min-height:80px"></textarea>
+        <textarea id="closingPara" placeholder="e.g. You've seen where {Client} stands, who is getting cited instead, and exactly what we'd build to change that. Every day without content is another day buyers find a competitor instead." oninput="save()" style="min-height:80px"></textarea>
       </div>
     </div>
 
@@ -713,7 +713,7 @@ function buildDynamicFields() {
       </div>
       <div class="field-group" style="margin-bottom:0">
         <label>Explanation</label>
-        <textarea id="gap${i}body" placeholder="e.g. When a GTM team asks ChatGPT about CRM enrichment tools, your name doesn't appear..." oninput="saveGap(${i})">${esc(g.body)}</textarea>
+        <textarea id="gap${i}body" placeholder="e.g. When a buyer asks ChatGPT about your category, your name doesn't appear..." oninput="saveGap(${i})">${esc(g.body)}</textarea>
       </div>
     </div>`).join('');
 
@@ -732,7 +732,7 @@ function buildDynamicFields() {
   const pr = document.getElementById('promptRows');
   pr.innerHTML = D.prompts.map((p,i) => `
     <div class="prompt-row">
-      <input type="text" id="prompt${i}text" placeholder="best CRM enrichment tools" oninput="savePrompt(${i})" value="${esc(p.text)}">
+      <input type="text" id="prompt${i}text" placeholder="${esc('best ' + ((D.clientKeywords||'').split(',')[0].trim() || 'products') )}" oninput="savePrompt(${i})" value="${esc(p.text)}">
       <input type="text" id="prompt${i}mentions" placeholder="0" oninput="savePrompt(${i})" value="${esc(p.mentions)}">
       <input type="text" id="prompt${i}score" placeholder="5" oninput="savePrompt(${i})" value="${esc(p.score)}">
       <select id="prompt${i}status" onchange="savePrompt(${i})">
