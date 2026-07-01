@@ -111,6 +111,9 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
       <button class="btn btn-ghost" onclick="loadDemo()" style="font-size:12px;padding:6px 14px;display:flex;align-items:center;gap:6px">
         <span>🏒</span> Load Hockey Stickman demo
       </button>
+      <button class="btn btn-ghost" onclick="loadDemoWBM()" style="font-size:12px;padding:6px 14px;display:flex;align-items:center;gap:6px">
+        <span>💻</span> Load WBM Technologies demo
+      </button>
       <button class="btn btn-ghost" onclick="if(confirm('Clear all data and start fresh?')){localStorage.removeItem(\'pb_data\');Object.assign(D,PREFILL);buildDynamicFields();syncInputsToD();renderStep(currentStep);}" style="font-size:12px;padding:6px 14px;color:#dc2626;border-color:#fca5a5">
         Reset
       </button>
@@ -474,6 +477,9 @@ const PREFILL = {
   clientDR:'', clientKeywords:'', clientTraffic:'', clientRefDomains:'', slide04callout:'',
   monthlyPrice:'$2,500', cmsType:'Shopify', timelineM3:'', closingPara:'',
   peekabooId: '',
+  // Comparison slide is opt-in per client; empty = slide omitted. Explicit here so
+  // Object.assign-based demo switching always clears any prior client's compare data.
+  compareLines: [], compareTitle:'', compareSub:'', compareCallout:'', compareCalloutNum:'', compareCalloutLbl:'',
 };
 
 const D = Object.assign({}, PREFILL);
@@ -550,19 +556,112 @@ const DEMO = {
   closingPara: 'Hockey Stickman is already the most knowledgeable retailer in the category. We make that expertise visible to the AI models that now control where buyers start their journey.',
   includeReddit: true,
   buyerType: 'Hockey Players & Parents',
+  compareLines: [],  // single-brand client — no comparison slide
+};
+
+// DEMO DATA — WBM Technologies (live Peekaboo data, June 2026)
+// Main brand: score 5/100, 2 citations, 39 chats · Managed Print: 5/100, 3 citations, 58 chats · Managed IT: 0/100, 0 citations, 40 chats
+const DEMO_WBM = {
+  clientName: 'WBM Technologies',
+  clientDomain: 'wbm.ca',
+  clientLogo: '',
+  clientColor: '#1A4FA0',
+  clientDR: '35',
+  clientKeywords: '3,100',
+  clientTraffic: '12,500',
+  clientRefDomains: '280',
+  proposalDate: 'June 2026',
+  buyerType: 'IT & Operations Decision-Makers',
+  peekabooId: 'bd4c0046-3f73-43b5-a454-452da9dc459d',
+  slide01headline: 'WBM Is Invisible in the AI Conversations That Drive Managed IT Decisions.',
+  slide01subline: 'AI score: 5/100 overall — and 0/100 in Managed IT. Buyers asking ChatGPT who to trust for managed services in Western Canada never hear your name.',
+  slide03title: 'The Managed IT Buying Journey Has Moved to AI.',
+  slide03subtitle: 'Decision-makers ask ChatGPT and Gemini for provider recommendations before calling anyone. WBM earned zero mentions across 40 Managed IT AI conversations analyzed.',
+  gaps: [
+    {title:'Managed IT: 0 citations across 40 AI conversations', body:'WBM scored 0/100 in Managed IT — the category driving your pipeline. AI answered every question about managed services in Western Canada without mentioning WBM once. cloudorbis.com and silverbellgroup.com filled that gap instead.'},
+    {title:'wbm.ca absent from every AI source list', body:'AI cited linkedin.com (13×), cyber.gc.ca (9×), and YouTube (10×) instead of wbm.ca. Your website content is not structured in a way AI models can extract and cite as authoritative answers to buyer questions.'},
+    {title:'Managed Print earns citations — Managed IT earns zero', body:'Your Managed Print brand scores 5/100 (3 citations in 58 conversations). Managed IT scores 0. The gap between your two service lines shows the problem is content structure and entity authority — not brand awareness.'},
+    {title:'No Entity Authority for managed IT in Western Canada', body:'AI associates "managed IT Western Canada" with government security resources and out-of-region vendors. WBM has 25+ years of local expertise, enterprise clients, and proven delivery — none of which AI currently recognizes or cites.'}
+  ],
+  comps: [
+    {domain:'cloudorbis.com',      dr:'28', kw:'1,200', traffic:'8,000',  aiScore:'0'},
+    {domain:'innov8.ca',           dr:'22', kw:'800',   traffic:'4,500',  aiScore:'0'},
+    {domain:'silverbellgroup.com', dr:'18', kw:'600',   traffic:'3,200',  aiScore:'0'},
+    {domain:'smartprint.com',      dr:'32', kw:'2,100', traffic:'15,000', aiScore:'0'}
+  ],
+  aiScore: '5',
+  aiRank: '#1 in category',
+  aiCitations: '2',
+  aiChats: '39',
+  slide05callout: 'Managed IT: 0/100 (0 citations, 40 conversations). Managed Print: 5/100 (3 citations, 58 conversations). wbm.ca earned 2 total citations across 137 buyer conversations analyzed.',
+  prompts: [
+    {text:'Best managed IT service provider in Western Canada',                            mentions:'40', score:'0',   status:''},
+    {text:'How do I choose a managed services provider for my business?',                  mentions:'40', score:'0',   status:''},
+    {text:'IT support companies for businesses in Alberta',                                mentions:'40', score:'0',   status:''},
+    {text:'How can small businesses improve end-user computing experiences?',              mentions:'39', score:'100', status:'warn'},
+    {text:'How do businesses in Western Canada ensure their data is secure?',              mentions:'39', score:'100', status:'warn'},
+    {text:'What should I look for when choosing a managed print service?',                 mentions:'58', score:'100', status:'warn'}
+  ],
+  sources: [
+    {domain:'gartner.com',           mentions:'40'},
+    {domain:'youtube.com',           mentions:'10'},
+    {domain:'linkedin.com',          mentions:'13'},
+    {domain:'cyber.gc.ca',           mentions:'9'},
+    {domain:'cloudorbis.com',        mentions:'7'},
+    {domain:'cybersecuritycanada.ca',mentions:'6'},
+    {domain:'wbm.ca',                mentions:'2'}
+  ],
+  kwClusters: [
+    {title:'Managed IT Services',  kw1:'managed IT services western canada', kw2:'managed service provider alberta',      kw3:'IT support edmonton calgary'},
+    {title:'Cybersecurity',        kw1:'cybersecurity services small business canada', kw2:'data security western canada', kw3:'IT security managed services'},
+    {title:'Managed Print',        kw1:'managed print services canada',      kw2:'print management solutions',            kw3:'office printing services edmonton'}
+  ],
+  slide06callout: 'WBM earns 0 AI citations in Managed IT and 3 in Managed Print across 98 total conversations analyzed. The opportunity is largest exactly where the gap is biggest.',
+  compAlts: [
+    {domain:'cloudorbis.com',      label:'CloudOrbis'},
+    {domain:'innov8.ca',           label:'Innov8'},
+    {domain:'silverbellgroup.com', label:'Silver Bell Group'},
+    {domain:'smartprint.com',      label:'SmartPrint'}
+  ],
+  slide07subtitle: 'These are the vendors AI recommends instead of WBM when buyers ask about managed IT and print services in Western Canada.',
+  slide04callout: 'WBM has 25+ years of regional expertise, enterprise clients, and proven delivery. The gap is not credibility — it is AI-readable content structure and entity authority.',
+  monthlyPrice: '$2,500',
+  cmsType: 'WordPress',
+  timelineM3: 'AI citation visibility established for managed IT and cybersecurity categories in Western Canada',
+  closingPara: 'WBM is already the trusted partner for managed IT and print services across Western Canada. We make that 25-year track record visible to the AI models that now influence every vendor shortlist.',
+  includeReddit: false,
+  buyerType: 'IT & Operations Decision-Makers',
+  // Optional comparison slide (renders only when present) — live Peekaboo, June 2026
+  compareTitle: 'One Brand, Three Service Lines — Three Very Different AI Outcomes',
+  compareSub: 'We ran all three WBM service lines through Peekaboo. The pattern is clear: WBM barely registers where it competes — and is completely invisible in Managed IT, the highest-value category.',
+  compareLines: [
+    {name:'Managed Print',     sub:'',           cat:'Service Line 01',                 score:5, citations:3, chats:58, prompts:2, flag:false, badge:'Best of the three',  sources:[{d:'gartner.com',n:'40×'},{d:'papercut.com',n:'26×'},{d:'reddit.com',n:'20×'}]},
+    {name:'WBM Technologies',   sub:'(corporate)',cat:'Service Line 02',                 score:5, citations:2, chats:39, prompts:2, flag:false, badge:'2 citations',       sources:[{d:'linkedin.com',n:'13×'},{d:'cyber.gc.ca',n:'8×'},{d:'freshworks.com',n:'6×'}]},
+    {name:'Managed IT',         sub:'',           cat:'Service Line 03 · Highest value', score:0, citations:0, chats:40, prompts:0, flag:true,  badge:'Completely invisible',sources:[{d:'youtube.com',n:'10×'},{d:'cloudorbis.com',n:'7×'},{d:'silverbellgroup.com',n:'5×'}]}
+  ],
+  compareCalloutNum: '5',
+  compareCalloutLbl: 'Total citations across 137 chats',
+  compareCallout: 'Across <strong>137 buyer conversations</strong> analyzed by AI, WBM was cited just <strong>5 times</strong> — and <strong>zero times in Managed IT</strong>. The category with the most revenue at stake is the one where AI never says your name. That\'s the gap we close first.',
 };
 
 function loadDemo() {
   if (!confirm('Load Hockey Stickman demo data? This will replace your current form data.')) return;
   Object.assign(D, DEMO);
   try { localStorage.setItem('pb_data', JSON.stringify(D)); } catch(e){}
-  // Rebuild ALL dynamic fields (comps, prompts, sources, gaps, kw clusters) from fresh D
   buildDynamicFields();
-  // Sync flat inputs (text fields, colours, logo)
   syncInputsToD();
-  // Re-render the current step to show updated state
   renderStep(currentStep);
-  // Flash the button green briefly
+  const btn = event && event.target && event.target.closest('button');
+  if (btn) { const orig = btn.innerHTML; btn.innerHTML = '✓ Demo loaded'; btn.style.color='#16a34a'; btn.style.borderColor='#86efac'; setTimeout(()=>{ btn.innerHTML=orig; btn.style.color=''; btn.style.borderColor=''; }, 1800); }
+}
+
+function loadDemoWBM() {
+  if (!confirm('Load WBM Technologies demo data? This will replace your current form data.')) return;
+  Object.assign(D, DEMO_WBM);
+  try { localStorage.setItem('pb_data', JSON.stringify(D)); } catch(e){}
+  buildDynamicFields();
+  syncInputsToD();
+  renderStep(currentStep);
   const btn = event && event.target && event.target.closest('button');
   if (btn) { const orig = btn.innerHTML; btn.innerHTML = '✓ Demo loaded'; btn.style.color='#16a34a'; btn.style.borderColor='#86efac'; setTimeout(()=>{ btn.innerHTML=orig; btn.style.color=''; btn.style.borderColor=''; }, 1800); }
 }
@@ -1366,7 +1465,14 @@ function fillTemplate() {
     ? `<img src="${toolLogo}" style="width:clamp(32px,4.5vh,46px);height:clamp(32px,4.5vh,46px);border-radius:8px;margin-bottom:clamp(10px,1.4vh,16px);display:block;object-fit:contain">`
     : `<div style="width:clamp(32px,4.5vh,46px);height:clamp(32px,4.5vh,46px);border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent-bd);margin-bottom:clamp(10px,1.4vh,16px);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent)">${(D.agencyToolName||D.agencyName||'AI').substring(0,3).toUpperCase()}</div>`;
 
-  const n = 12; // total slides
+  // Optional comparison slide — only renders when a valid compareLines array is present
+  const cmpLines = Array.isArray(D.compareLines) ? D.compareLines.filter(c => c && c.name) : [];
+  const hasCompare = cmpLines.length >= 2;
+  const n = 12 + (hasCompare ? 1 : 0); // total slides (13 when comparison present)
+  // Trailing slide numbers shift by 1 when the comparison slide is inserted at position 11
+  const sCompare = 11;
+  const sNext  = hasCompare ? 12 : 11;
+  const sAbout = hasCompare ? 13 : 12;
 
   // Prompt status badge helper
   function promptBadge(score) {
@@ -1403,6 +1509,68 @@ function fillTemplate() {
     ['Content Refresh', 'Ongoing', 'Existing pages updated with new keyword data. Stale content consolidated.'],
     ['Monthly Report', 'Monthly', 'Rankings, traffic, and AI citation data every month. You always know what moved.'],
   ];
+
+  // ── Optional comparison slide (slide 11 when present) — data-driven from D.compareLines ──
+  // numv: zero-safe numeric formatter (tok() drops 0 because `0||''` is falsy)
+  const numv = (v) => (v === null || v === undefined || v === '') ? '' : String(v);
+  const compareCards = !hasCompare ? '' : cmpLines.map(c => {
+    const flag = !!c.flag;
+    const scoreColor = flag ? 'var(--red)' : 'var(--warn)';
+    const zero = (v) => (parseFloat(v)||0) === 0;
+    const pill = flag
+      ? `<span style="display:inline-flex;align-items:center;gap:6px;font-size:clamp(11px,1.4vh,13px);font-weight:700;padding:5px 11px;border-radius:99px;margin-top:12px;background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)">● ${tok(c.badge)||'Invisible'}</span>`
+      : `<span style="display:inline-flex;align-items:center;gap:6px;font-size:clamp(11px,1.4vh,13px);font-weight:700;padding:5px 11px;border-radius:99px;margin-top:12px;background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-bd)">▲ ${tok(c.badge)||''}</span>`;
+    const srcRows = (c.sources||[]).map(s =>
+      `<div style="display:flex;align-items:center;justify-content:space-between;font-size:clamp(12px,1.5vh,15px);padding:4px 0;color:var(--ink2)"><span style="font-weight:600">${tok(s.d)}</span><span style="font-family:'DM Mono',monospace;color:var(--ink3);font-weight:600">${tok(s.n)}</span></div>`
+    ).join('');
+    const wbmRow = flag
+      ? `<div style="display:flex;align-items:center;justify-content:space-between;font-size:clamp(12px,1.5vh,15px);padding:4px 0;opacity:.9"><span style="font-weight:800;color:var(--accent)">${tok(D.clientDomain)||'your site'}</span><span style="font-family:'DM Mono',monospace;color:var(--red);font-weight:600">0 mentions</span></div>`
+      : `<div style="display:flex;align-items:center;justify-content:space-between;font-size:clamp(12px,1.5vh,15px);padding:4px 0;opacity:.55"><span style="font-weight:800;color:var(--accent)">${tok(D.clientDomain)||'your site'}</span><span style="font-family:'DM Mono',monospace;color:var(--ink3);font-weight:600">not in top sources</span></div>`;
+    const metric = (label, val, isZero) =>
+      `<div style="display:flex;align-items:center;justify-content:space-between;padding:clamp(7px,1.1vh,11px) 0;border-bottom:1px dashed var(--rule)"><span style="font-size:clamp(13px,1.7vh,16px);color:var(--ink3);font-weight:500">${label}</span><span style="font-family:'DM Mono',monospace;font-size:clamp(16px,2.3vh,22px);font-weight:600;color:${isZero?'var(--red)':'var(--ink)'}">${val}</span></div>`;
+    return `<div style="border-radius:16px;border:1.5px solid ${flag?'var(--red-bd)':'var(--rule)'};${flag?'box-shadow:0 0 0 1px var(--red-bd);':''}background:var(--paper);display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:clamp(14px,2vh,22px) clamp(16px,2vw,26px) clamp(12px,1.6vh,18px);border-bottom:1px solid var(--rule);${flag?'background:var(--red-bg)':''}">
+        <div style="font-size:clamp(10px,1.3vh,12px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:${flag?'var(--red)':'var(--ink4)'}">${tok(c.cat)||''}</div>
+        <div style="font-size:clamp(18px,2.7vh,25px);font-weight:800;color:var(--ink);line-height:1.15;margin-top:4px;letter-spacing:-.01em">${tok(c.name)}${c.sub?` <span style="font-weight:600;color:var(--ink3);font-size:clamp(13px,1.8vh,18px)">${tok(c.sub)}</span>`:''}</div>
+        <div style="display:flex;align-items:baseline;gap:10px;margin-top:clamp(10px,1.5vh,16px)">
+          <span style="font-family:'DM Mono',monospace;font-size:clamp(48px,8vh,84px);font-weight:500;line-height:.85;letter-spacing:-.04em;color:${scoreColor}">${numv(c.score)}</span>
+          <span style="font-size:clamp(16px,2.4vh,26px);font-weight:600;color:var(--ink4)">/ 100</span>
+        </div>
+        ${pill}
+      </div>
+      <div style="padding:clamp(12px,1.8vh,20px) clamp(16px,2vw,26px) clamp(14px,2vh,22px);display:flex;flex-direction:column;flex:1">
+        ${metric('AI citations', numv(c.citations), zero(c.citations))}
+        ${metric('Conversations analyzed', numv(c.chats), false)}
+        ${metric('Prompts appeared in', numv(c.prompts), zero(c.prompts))}
+        <div style="margin-top:auto;padding-top:clamp(10px,1.6vh,16px)">
+          <div style="font-size:clamp(10px,1.3vh,12px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:8px">AI cites these instead</div>
+          ${srcRows}${wbmRow}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const compareSlide = !hasCompare ? '' : `
+<!-- SLIDE 11: AI Visibility by Service Line (comparison) -->
+<section><div class="s">
+<div class="stripe"></div>
+${hdrHtml(sCompare,n)}
+<div class="body" style="gap:0">
+  <div class="divider"></div>
+  <h2>${tok(D.compareTitle)||'AI Visibility by Service Line'}</h2>
+  ${D.compareSub?`<p style="font-size:clamp(14px,1.9vh,19px);color:var(--ink2);font-weight:500;line-height:1.4;margin:8px 0 0">${tok(D.compareSub)}</p>`:''}
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(14px,1.6vw,22px);flex:1;min-height:0;margin-top:clamp(14px,2vh,22px)">
+    ${compareCards}
+  </div>
+  <div style="flex-shrink:0;margin-top:clamp(14px,2vh,22px);padding:clamp(14px,2vh,20px) clamp(18px,2.4vw,28px);background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:14px;display:flex;align-items:center;gap:clamp(16px,2vw,24px)">
+    <div style="flex-shrink:0;text-align:center;padding-right:clamp(16px,2vw,24px);border-right:1.5px solid var(--accent-bd)">
+      <div style="font-family:'DM Mono',monospace;font-size:clamp(34px,5.4vh,54px);font-weight:600;color:var(--accent);line-height:.9;letter-spacing:-.03em">${tok(D.compareCalloutNum)||cmpLines.reduce((a,c)=>a+(parseFloat(c.citations)||0),0)}</div>
+      <div style="font-size:clamp(11px,1.3vh,13px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-dark);margin-top:6px;max-width:9em;line-height:1.25">${tok(D.compareCalloutLbl)||'Total citations'}</div>
+    </div>
+    <div style="font-size:clamp(14px,1.9vh,20px);color:var(--ink2);font-weight:500;line-height:1.45">${D.compareCallout||''}</div>
+  </div>
+</div>
+</div></section>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1843,11 +2011,11 @@ ${hdrHtml(10,n)}
   </div>
 </div>
 </div></section>
-
-<!-- SLIDE 11: Next Steps -->
+${compareSlide}
+<!-- SLIDE: Next Steps -->
 <section><div class="s">
 <div class="stripe"></div>
-${hdrHtml(11,n)}
+${hdrHtml(sNext,n)}
 <div class="body" style="justify-content:center;align-items:center;gap:clamp(20px,3vh,36px)">
   <h2 style="text-align:center;max-width:80ch">Next Steps to Getting <span style="color:var(--accent)">${tok(D.clientName)} Visible in AI</span></h2>
   <a href="${tok(D.agencyBooking)||'#'}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;background:var(--accent-bg);border:2px solid var(--accent);border-radius:12px;padding:clamp(20px,3.2vh,36px) clamp(48px,6vw,80px);text-decoration:none;width:100%;max-width:600px" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
@@ -1862,10 +2030,10 @@ ${hdrHtml(11,n)}
 </div>
 </div></section>
 
-<!-- SLIDE 12: About Us -->
+<!-- SLIDE: About Us -->
 <section><div class="s">
 <div class="stripe"></div>
-${hdrHtml(12,n)}
+${hdrHtml(sAbout,n)}
 <div class="body" style="gap:clamp(14px,2vh,22px)">
   <div class="divider"></div>
   <!-- GA hero band on About slide -->
