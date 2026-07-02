@@ -809,7 +809,14 @@ function save() {
     'aiScore','aiRank','aiCitations','aiChats','slide05callout',
     'slide06callout','slide07subtitle','monthlyPrice','cmsType','timelineM3','closingPara',
     'peekabooId'];
-  fields.forEach(f => { const el = document.getElementById(f); if(el) D[f] = el.value; });
+  fields.forEach(f => {
+    const el = document.getElementById(f); if(!el) return;
+    // Preserve base64 data URIs (agencyLogo, agencyToolLogo) when the input can't
+    // reliably hold their full value — <input type="url"> silently clobbers
+    // ~500KB strings on some browsers, wiping the logo on next save().
+    if ((f === 'agencyLogo' || f === 'agencyToolLogo') && el.value === '' && typeof D[f] === 'string' && D[f].startsWith('data:')) return;
+    D[f] = el.value;
+  });
   const cc = document.getElementById('clientColor'); if(cc) D.clientColor = cc.value;
   const ac = document.getElementById('agencyColor'); if(ac) D.agencyColor = ac.value;
   const rEl = document.getElementById('includeReddit'); if(rEl) D.includeReddit = rEl.checked;
