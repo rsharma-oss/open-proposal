@@ -816,6 +816,13 @@ function loadFromStorage() {
     const s = localStorage.getItem('pb_data');
     if(s) Object.assign(D, JSON.parse(s));
   } catch(e){}
+  // Migration: v1 stored agencyLogo as a Shopify CDN URL that hotlink-blocks in
+  // preview contexts. If we detect it (or any http[s] URL still cached), swap in
+  // the base64-embedded PREFILL value and persist so this only runs once.
+  if (typeof D.agencyLogo === 'string' && /^https?:\/\/cdn\.shopify\.com\/.*Color_logo/.test(D.agencyLogo)) {
+    D.agencyLogo = PREFILL.agencyLogo;
+    try { localStorage.setItem('pb_data', JSON.stringify(D)); } catch(e){}
+  }
   const rEl = document.getElementById('includeReddit');
   if (rEl) rEl.checked = D.includeReddit !== false;
 }
